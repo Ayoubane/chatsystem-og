@@ -1,7 +1,7 @@
 package NI;
 
 import signals.TextMessage;
-import signals.HelloOk;
+import signals.HelloOK;
 import signals.Hello;
 import signals.Goodbye;
 import chatsystem.*;
@@ -57,7 +57,7 @@ public class UDPSender extends Thread {
         }
     }
 
-    public void sendHelloOk(HelloOk helloOk, InetAddress address, boolean broadcast){
+    public void sendHelloOk(HelloOK helloOk, InetAddress address, boolean broadcast){
         try {
 
           //  String host = "localhost";

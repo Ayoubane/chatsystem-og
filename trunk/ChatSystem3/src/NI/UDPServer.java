@@ -1,7 +1,7 @@
 package NI;
 
 import signals.TextMessage;
-import signals.HelloOk;
+import signals.HelloOK;
 import signals.Hello;
 import signals.Goodbye;
 import chatsystem.*;
@@ -20,7 +20,7 @@ public class UDPServer extends Thread {
     NI ni;
     int portr;
     private Hello hello=null;
-    private HelloOk helloOk=null;
+    private HelloOK helloOk=null;
     private Goodbye goodbye=null;
     private TextMessage msgRecu=null;
 
@@ -48,8 +48,8 @@ public class UDPServer extends Thread {
                 hello = (Hello) resultat;
                 iStream.close();
             }
-            else if(resultat instanceof HelloOk){
-                helloOk = (HelloOk) resultat;
+            else if(resultat instanceof HelloOK){
+                helloOk = (HelloOK) resultat;
                 iStream.close();
             }
             else if(resultat instanceof Goodbye){

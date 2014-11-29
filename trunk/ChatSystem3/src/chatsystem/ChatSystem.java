@@ -6,7 +6,7 @@
 package chatsystem;
 
 import signals.TextMessage;
-import signals.HelloOk;
+import signals.HelloOK;
 import signals.Hello;
 import signals.Goodbye;
 import GUI.GUI;
@@ -57,7 +57,7 @@ public class ChatSystem {
         gui.addUser(hello.getUsername());
     }
     
-    public void showHelloOk(HelloOk helloOk){
+    public void showHelloOk(HelloOK helloOk){
         gui.setMsg(helloOk.getUsername(),"Hello, I'm "+helloOk.getUsername());
         gui.addUser(helloOk.getUsername());
     }

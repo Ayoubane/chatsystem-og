@@ -2,10 +2,10 @@ package signals;
 
 import java.io.Serializable;
 
-public class Hello extends Signal {
+public class HelloOK extends Signal {
 	private String username;
 
-	public Hello(String username) {
+	public HelloOK(String username) {
 		super();
 		this.username = username;
 	}

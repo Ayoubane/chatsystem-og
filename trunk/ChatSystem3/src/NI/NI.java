@@ -6,7 +6,7 @@
 package NI;
 
 import signals.TextMessage;
-import signals.HelloOk;
+import signals.HelloOK;
 import signals.Hello;
 import signals.Goodbye;
 import chatsystem.ChatSystem;
@@ -16,6 +16,7 @@ import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Level;
@@ -43,11 +44,6 @@ public class NI implements NiInterface {
         try {
             localIpAdress = InetAddress.getByName("localhost");
             getIpOfInterfac("wlan0");
-            /*broadcast=localIpAdress;
-             byte[]address =broadcast.getAddress();
-             address[3]=(byte) 0xff;
-             address[2]=(byte) 0x00;
-             broadcast=InetAddress.getByAddress(address);*/
             System.out.println(localIpAdress.toString() + broadcast);
         } catch (UnknownHostException ex) {
             Logger.getLogger(NI.class.getName()).log(Level.SEVERE, null, ex);
@@ -62,11 +58,12 @@ public class NI implements NiInterface {
         } else if (obj instanceof Hello) {
             Hello hello;
             hello = (Hello) obj;
-            HelloOk helloOk = new HelloOk(controller.getUsername(), localIpAdress);
-            //  udpSender.sendHelloOk(helloOk, hello.getAdr(), false); //Normalement hello.getAdr()
+            HelloOK helloOk = new HelloOK(controller.getUsername()+"@"+localIpAdress);
+            System.out.println("hello received with parameters"+hello.getUsername());
+            udpSender.sendHelloOk(helloOk, getIpAdressFromUsername(hello.getUsername()), false); 
             controller.showHello((Hello) obj);
-        } else if (obj instanceof HelloOk) {
-            controller.showHelloOk((HelloOk) obj);
+        } else if (obj instanceof HelloOK) {
+         //   controller.showHelloOK((HelloOK) obj);
         } else if (obj instanceof Goodbye) {
             controller.showGoodbye((Goodbye) obj);
         } else {
@@ -77,19 +74,23 @@ public class NI implements NiInterface {
 
     @Override
     public void sendHello(String userName) {
-        Hello hello = new Hello(userName);//, this.localIpAdress);
-        System.out.println(broadcast);
-        udpSender.sendHello(hello, broadcast, true); //Normalement Broadcast Address !
+        Hello hello = new Hello(userName+"@"+localIpAdress.toString());
+        String[] split= "Omar@/192.168.2.5".split("/");
+        System.out.println(split[1]);
+        System.out.println("hello : "+ userName+"@"+localIpAdress.toString());
+        udpSender.sendHello(hello, broadcast, true);
     }
 
     public void sendGoodbye(String userName) {
-        Goodbye goodbye = new Goodbye(userName, localIpAdress);
-        udpSender.sendGoodbye(goodbye, localIpAdress, false);
+   //     Goodbye goodbye = new Goodbye(userName, localIpAdress);
+    //    udpSender.sendGoodbye(goodbye, localIpAdress, false);
     }
 
     public void sendMessage(String msg) {
-        //  TextMessage message=new TextMessage(controller.getUsername(), broadcast, msg);
-        //  udpSender.sendMsg(message, broadcast,true);
+        ArrayList<String> to=new ArrayList<>();
+        to.add(controller.getUsername());
+        TextMessage message=new TextMessage(msg,controller.getUsername(),to);
+        udpSender.sendMsg(message, broadcast,true);
     }
 
     @Override
@@ -112,6 +113,11 @@ public class NI implements NiInterface {
         InetAddress adress = InetAddress.getByName(splited[1]);
         return adress;
     }
+    public String getNameFromUsername(String username) throws UnknownHostException {
+        String[] splited = username.split("@");
+        return splited[0];
+    }
+    
 
     private void getIpOfInterfac(String inter) throws UnknownHostException {
         try {
