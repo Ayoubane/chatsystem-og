@@ -58,7 +58,7 @@ public class NI implements NiInterface {
         } else if (obj instanceof Hello) {
             Hello hello;
             hello = (Hello) obj;
-            HelloOK helloOk = new HelloOK(controller.getUsername()+"@"+localIpAdress);
+            HelloOK helloOk = new HelloOK(controller.getUsername()+""+localIpAdress);
             System.out.println("hello received with parameters"+hello.getUsername());
             udpSender.sendHelloOk(helloOk, getIpAdressFromUsername(hello.getUsername()), false); 
             controller.showHello((Hello) obj);
@@ -74,10 +74,8 @@ public class NI implements NiInterface {
 
     @Override
     public void sendHello(String userName) {
-        Hello hello = new Hello(userName+"@"+localIpAdress.toString());
-        String[] split= "Omar@/192.168.2.5".split("/");
-        System.out.println(split[1]);
-        System.out.println("hello : "+ userName+"@"+localIpAdress.toString());
+        Hello hello = new Hello(userName+""+localIpAdress.toString());
+        System.out.println("hello : "+ userName+""+localIpAdress.toString());
         udpSender.sendHello(hello, broadcast, true);
     }
 
@@ -109,12 +107,12 @@ public class NI implements NiInterface {
     }
 
     public InetAddress getIpAdressFromUsername(String username) throws UnknownHostException {
-        String[] splited = username.split("@");
+        String[] splited = username.split("/");
         InetAddress adress = InetAddress.getByName(splited[1]);
         return adress;
     }
     public String getNameFromUsername(String username) throws UnknownHostException {
-        String[] splited = username.split("@");
+        String[] splited = username.split("/");
         return splited[0];
     }
     
