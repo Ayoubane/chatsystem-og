@@ -25,8 +25,8 @@ public class GUI extends Thread {
     public GUI(ChatSystem controller) {
         this.controller = controller;
     }
-    
-    public String getUser(){
+
+    public String getUser() {
         return this.username;
     }
 
@@ -37,7 +37,7 @@ public class GUI extends Thread {
     public void setMsg(String username, String msg) {
         //this.msg = msg;
         if (chatGui != null) {
-            chatGui.getjTextArea1().append(username+": ");
+            chatGui.getjTextArea1().append(username + ": ");
             chatGui.getjTextArea1().append(msg);
             chatGui.getjTextArea1().append("\n");
         }
@@ -45,13 +45,13 @@ public class GUI extends Thread {
     }
 
     public void performConnect(String userName) {
-        this.username=userName;
+        this.username = userName;
         controller.sendHello(userName);
     }
-    
-    public void performDisconnect(String userName){
+
+    public void performDisconnect(String userName) {
         controller.sndGoodbye(userName);
-        
+
     }
 
     public void performSend(String msg) {
@@ -69,28 +69,33 @@ public class GUI extends Thread {
     public void setChatGui(ChatGUI chatGui) {
         this.chatGui = chatGui;
     }
-    
-    public void addUser(String username){
+
+    public void addUser(String username) {
         chatGui.addUser(username);
     }
-    
-    public void rmvUser(String username){
+
+    public void rmvUser(String username) {
         chatGui.removeUser(username);
     }
-    
+
     //---------------------------------------//
-     public void playSound() {
+    public void playSound() {
         try {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("fb.wav"));
-            Clip clip = AudioSystem.getClip( );
+            Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
-            clip.start( );
-        }
-        catch(Exception e)  {
-            e.printStackTrace( );
+            clip.start();
+        } catch (Exception e) {
+            try {
+                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("fb1.wav"));
+                Clip clip = AudioSystem.getClip();
+                clip.open(audioInputStream);
+                clip.start();
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
         }
     }
     //--------------------------------------//
-    
-}
 
+}

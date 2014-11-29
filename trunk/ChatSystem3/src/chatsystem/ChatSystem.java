@@ -57,7 +57,7 @@ public class ChatSystem {
         gui.addUser(hello.getUsername());
     }
     
-    public void showHelloOk(HelloOK helloOk){
+    public void showHelloOK(HelloOK helloOk){
         gui.setMsg(helloOk.getUsername(),"Hello, I'm "+helloOk.getUsername());
         gui.addUser(helloOk.getUsername());
     }

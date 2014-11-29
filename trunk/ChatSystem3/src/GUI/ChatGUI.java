@@ -3,16 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package GUI;
 
 import java.awt.event.KeyEvent;
 import javax.swing.DefaultListModel;
 import javax.swing.JTextArea;
-
-
-
-
 
 /**
  *
@@ -23,22 +18,21 @@ public class ChatGUI extends javax.swing.JFrame {
     /**
      * Creates new form ChatGUI
      */
-    
     GUI gui;
-    DefaultListModel model=new DefaultListModel();
+    DefaultListModel model = new DefaultListModel();
+
     public ChatGUI(GUI gui) {
-        this.gui=gui;
+        this.gui = gui;
         initComponents();
     }
-    
-    public void editJlabel1(String s){
+
+    public void editJlabel1(String s) {
         jLabel1.setText(s);
     }
- 
-    /*public void editText1(String msg){
-        jTextArea1.setText(msg);
-    }*/
 
+    /*public void editText1(String msg){
+     jTextArea1.setText(msg);
+     }*/
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -176,7 +170,7 @@ public class ChatGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        jTextArea1.append(gui.getUser()+": "); // Or me ;)
+        jTextArea1.append(gui.getUser() + ": "); // Or me ;)
         jTextArea1.append(jTextArea2.getText());
         jTextArea1.append("\n");
         gui.performSend(jTextArea2.getText());
@@ -192,7 +186,7 @@ public class ChatGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jTextArea2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea2KeyPressed
-        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             jTextArea1.append("Me :  ");
             jTextArea1.append(jTextArea2.getText());
             jTextArea1.append("\n");
@@ -274,12 +268,17 @@ public class ChatGUI extends javax.swing.JFrame {
         this.jTextArea2 = jTextArea2;
     }
 
-    public void addUser(String username){
-        model.addElement(username);
+    public void addUser(String username) {
+        if (!model.contains(username)) {
+            model.addElement(username);
+        }
     }
-    
-    public void removeUser(String username){
-        model.removeElement(username);
+
+    public void removeUser(String username) {
+        
+        if (!model.contains(username)) {
+            model.removeElement(username);
+        }
+        
     }
 }
-
