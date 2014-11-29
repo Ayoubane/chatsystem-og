@@ -10,7 +10,6 @@ import signals.HelloOK;
 import signals.Hello;
 import signals.Goodbye;
 import chatsystem.ChatSystem;
-import chatsystem.*;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
@@ -18,7 +17,6 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -59,11 +57,10 @@ public class NI implements NiInterface {
             Hello hello;
             hello = (Hello) obj;
             HelloOK helloOk = new HelloOK(controller.getUsername()+""+localIpAdress);
-            System.out.println("hello received with parameters"+hello.getUsername());
             udpSender.sendHelloOk(helloOk, getIpAdressFromUsername(hello.getUsername()), false); 
             controller.showHello((Hello) obj);
         } else if (obj instanceof HelloOK) {
-         //   controller.showHelloOK((HelloOK) obj);
+            controller.showHelloOK((HelloOK) obj);
         } else if (obj instanceof Goodbye) {
             controller.showGoodbye((Goodbye) obj);
         } else {
@@ -80,8 +77,8 @@ public class NI implements NiInterface {
     }
 
     public void sendGoodbye(String userName) {
-   //     Goodbye goodbye = new Goodbye(userName, localIpAdress);
-    //    udpSender.sendGoodbye(goodbye, localIpAdress, false);
+        Goodbye goodbye = new Goodbye(userName+""+localIpAdress);
+        udpSender.sendGoodbye(goodbye, broadcast, true);
     }
 
     public void sendMessage(String msg) {
