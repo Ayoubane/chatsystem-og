@@ -1,5 +1,6 @@
 package signals;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class FileProposal extends Signal {

@@ -5,6 +5,8 @@
  */
 package signals;
 
+import NI.*;
+
 /**
  *
  * @author gb
