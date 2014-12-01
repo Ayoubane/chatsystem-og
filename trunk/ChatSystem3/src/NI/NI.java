@@ -31,7 +31,11 @@ public class NI implements NiInterface {
     ChatSystem controller;
     InetAddress localIpAdress;
     InetAddress broadcast;
-    InetAddress mask;
+    InetAddress remoteIpAdress;
+    
+    String localIpAdressString;
+    String broadcastString;
+    private String remoteIpAdressString;
 
     public NI(ChatSystem controller, int portr, int ports) {
         udpSender = new UDPSender(this, ports);
@@ -42,7 +46,7 @@ public class NI implements NiInterface {
         try {
             localIpAdress = InetAddress.getByName("localhost");
             getIpOfInterfac("wlan0");
-            System.out.println(localIpAdress.toString() + broadcast);
+            System.out.println(localIpAdressString+ "/"+ broadcastString);
         } catch (UnknownHostException ex) {
             Logger.getLogger(NI.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -56,7 +60,7 @@ public class NI implements NiInterface {
         } else if (obj instanceof Hello) {
             Hello hello;
             hello = (Hello) obj;
-            HelloOK helloOk = new HelloOK(controller.getUsername()+""+localIpAdress);
+            HelloOK helloOk = new HelloOK(controller.getUsername()+"@"+localIpAdressString);
             udpSender.sendHelloOk(helloOk, getIpAdressFromUsername(hello.getUsername()), false); 
             controller.showHello((Hello) obj);
         } else if (obj instanceof HelloOK) {
@@ -71,13 +75,13 @@ public class NI implements NiInterface {
 
     @Override
     public void sendHello(String userName) {
-        Hello hello = new Hello(userName+""+localIpAdress.toString());
-        System.out.println("hello : "+ userName+""+localIpAdress.toString());
+        Hello hello = new Hello(userName+"@"+localIpAdressString);
+        System.out.println("hello : "+ userName+"@"+localIpAdressString);
         udpSender.sendHello(hello, broadcast, true);
     }
 
     public void sendGoodbye(String userName) {
-        Goodbye goodbye = new Goodbye(userName+""+localIpAdress);
+        Goodbye goodbye = new Goodbye(userName+"@"+localIpAdressString);
         udpSender.sendGoodbye(goodbye, broadcast, true);
     }
 
@@ -85,7 +89,7 @@ public class NI implements NiInterface {
         ArrayList<String> to=new ArrayList<>();
         to.add(controller.getUsername());
         TextMessage message=new TextMessage(msg,controller.getUsername(),to);
-        udpSender.sendMsg(message, broadcast,true);
+        udpSender.sendMsg(message, remoteIpAdress,true);
     }
 
     @Override
@@ -104,14 +108,33 @@ public class NI implements NiInterface {
     }
 
     public InetAddress getIpAdressFromUsername(String username) throws UnknownHostException {
-        String[] splited = username.split("/");
+        String[] splited = username.split("@");
         InetAddress adress = InetAddress.getByName(splited[1]);
         return adress;
     }
     public String getNameFromUsername(String username) throws UnknownHostException {
-        String[] splited = username.split("/");
+        String[] splited = username.split("@");
         return splited[0];
     }
+
+    public InetAddress getRemoteIpAdress() {
+        return remoteIpAdress;
+    }
+
+    public void setRemoteIpAdress(InetAddress remoteIpAdress) {
+        this.remoteIpAdress = remoteIpAdress;
+    }
+
+    public String getRemoteIpAdressString() {
+        return remoteIpAdressString;
+    }
+
+    public void setRemoteIpAdressString(String remoteIpAdressString) throws UnknownHostException {
+        this.remoteIpAdressString = remoteIpAdressString;
+        setRemoteIpAdress(getIpAdressFromUsername(remoteIpAdressString));
+    }
+    
+    
     
 
     private void getIpOfInterfac(String inter) throws UnknownHostException {
@@ -132,7 +155,9 @@ public class NI implements NiInterface {
                         {
                             if (intAddress.getAddress().getAddress().length == 4) {
                                 localIpAdress=intAddress.getAddress();
+                                localIpAdressString=localIpAdress.getHostAddress();
                                 broadcast=intAddress.getBroadcast();
+                                broadcastString=broadcast.getHostAddress();
                                // System.out.println(intAddress.getBroadcast());
                             }
                         }

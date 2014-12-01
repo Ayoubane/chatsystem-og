@@ -14,6 +14,7 @@ import NI.NI;
 import java.io.IOException;
 import java.util.Scanner;
 import chatsystem.*;
+import java.net.UnknownHostException;
 
 /**
  *
@@ -72,5 +73,7 @@ public class ChatSystem {
         return this.gui.getUser();
     }
     
-
+    public void setRemoteIpAdress(String username) throws UnknownHostException{
+        ni.setRemoteIpAdressString(username);
+    }
 }
