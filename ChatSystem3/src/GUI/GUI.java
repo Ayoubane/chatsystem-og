@@ -7,6 +7,7 @@ package GUI;
 
 import chatsystem.ChatSystem;
 import java.io.File;
+import java.net.UnknownHostException;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -78,6 +79,10 @@ public class GUI extends Thread {
         chatGui.removeUser(username);
     }
 
+    public void setRemoteIpAdress(String username) throws UnknownHostException{
+        controller.setRemoteIpAdress(username);
+    }
+    
     //---------------------------------------//
     public void playSound() {
         try {
