@@ -8,6 +8,7 @@ package GUI;
 import chatsystem.ChatSystem;
 import java.io.File;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -20,6 +21,7 @@ public class GUI extends Thread {
 
     ChatSystem controller;
     private ChatGUI chatGui;
+    private ArrayList<ChatGUI> groupe =new ArrayList();  // Pour la conversation entre groupe
     private String msg;
     private String username;
 
@@ -82,6 +84,24 @@ public class GUI extends Thread {
     public void setRemoteIpAdress(String username) throws UnknownHostException{
         controller.setRemoteIpAdress(username);
     }
+    
+    public void setRmteIpAddresses(ArrayList<String> addresses) throws UnknownHostException{
+        controller.setRmteIpAddresses(addresses);
+    }
+
+    public ArrayList<ChatGUI> getGroupe() {
+        return groupe;
+    }
+
+    public void addGroupe(ChatGUI grp) {
+        this.groupe.add(grp);
+    }
+    
+    public int getNbGroupe(){
+        return this.groupe.size();
+    }
+    
+    
     
     //---------------------------------------//
     public void playSound() {

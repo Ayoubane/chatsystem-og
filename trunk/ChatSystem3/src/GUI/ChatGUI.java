@@ -6,9 +6,14 @@
 package GUI;
 
 import java.awt.event.KeyEvent;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JTextArea;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -24,19 +29,24 @@ public class ChatGUI extends javax.swing.JFrame {
     GUI gui;
     DefaultListModel model = new DefaultListModel();
 
-    public ChatGUI(final GUI gui) {
+    public ChatGUI(final GUI gui, boolean unigroup) {
         this.gui = gui;
         initComponents();
-        
-        listSelectionListener = new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent listSelectionEvent) {
-                gui.setRemoteIpAdress(jList1.getSelectedValue().toString());
-                String username=jList1.getSelectedValue().toString();
-                String[] ipadress=username.split("@");
-                jLabel2.setText(ipadress[1]);
-            }
-        };
-       jList1.addListSelectionListener(listSelectionListener);
+        if(unigroup==true){
+            listSelectionListener = new ListSelectionListener() {
+                public void valueChanged(ListSelectionEvent listSelectionEvent) {
+                    try {
+                        gui.setRemoteIpAdress(jList1.getSelectedValue().toString());
+                        String username=jList1.getSelectedValue().toString();
+                        String[] ipadress=username.split("@");
+                        jLabel2.setText(ipadress[1]);
+                    } catch (UnknownHostException ex) {
+                        Logger.getLogger(ChatGUI.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            };
+            jList1.addListSelectionListener(listSelectionListener);
+        }
     }
 
     public void editJlabel1(String s) {
@@ -141,16 +151,16 @@ public class ChatGUI extends javax.swing.JFrame {
                             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jButton3)
-                                .addGap(0, 60, Short.MAX_VALUE))
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 459, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
@@ -164,10 +174,8 @@ public class ChatGUI extends javax.swing.JFrame {
                         .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(3, 3, 3)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel2)
+                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -175,7 +183,10 @@ public class ChatGUI extends javax.swing.JFrame {
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(6, 6, 6)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton3)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(10, 10, 10)
+                        .addComponent(jButton3))))
         );
 
         jLabel2.getAccessibleContext().setAccessibleName("Destination");
@@ -198,7 +209,7 @@ public class ChatGUI extends javax.swing.JFrame {
 
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        jTextArea1.append(gui.getUser() + ": "); // Or me ;)
+        jTextArea1.append(gui.getUser() + " : "); // Or me ;)
         jTextArea1.append(jTextArea2.getText());
         jTextArea1.append("\n");
         gui.performSend(jTextArea2.getText());
@@ -210,12 +221,32 @@ public class ChatGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+        //Open a new window
+        ChatGUI groupe=new ChatGUI(gui, false);
+        gui.addGroupe(groupe);
+        groupe.editJlabel1("Groupe de chat N° " + gui.getNbGroupe());
+        groupe.jButton3.setEnabled(false);
+        groupe.setVisible(true);
+        //Actions on jList
+        groupe.jList1.setModel(model);
+        groupe.jList1.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        listSelectionListener = new ListSelectionListener() {
+                public void valueChanged(ListSelectionEvent listSelectionEvent) {
+                    int[] selectedIx = jList1.getSelectedIndices();
+                    ArrayList<String> grp=new ArrayList();
+                    for (int i = 0; i < selectedIx.length; i++) {
+                        grp.add((String) jList1.getModel().getElementAt(selectedIx[i]));
+                    }
+                    gui.setRmteIpAddresses(grp);
+                }
+            };
+            groupe.jList1.addListSelectionListener(listSelectionListener);
+        
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jTextArea2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea2KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            jTextArea1.append("Me :  ");
+            jTextArea1.append(gui.getUser()+" : ");
             jTextArea1.append(jTextArea2.getText());
             jTextArea1.append("\n");
             gui.performSend(jTextArea2.getText());
@@ -224,7 +255,7 @@ public class ChatGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextArea2KeyPressed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        jTextArea1.append("Me :  ");
+        jTextArea1.append(gui.getUser() + " : ");
         jTextArea1.append(jTextArea2.getText());
         jTextArea1.append("\n");
         gui.performDisconnect(gui.getUser());
