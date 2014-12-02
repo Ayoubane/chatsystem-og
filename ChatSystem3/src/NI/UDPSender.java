@@ -15,6 +15,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import signals.FileProposal;
 
 public class UDPSender extends Thread {
 
@@ -141,5 +142,32 @@ public class UDPSender extends Thread {
 
     public void addToBuffer(String msg) {
         buffer.add(msg);
+    }
+
+    void sendProposal(FileProposal proposal, InetAddress address, boolean b) {
+        try {
+
+          //  String host = "localhost";
+            int port = ports;
+            //BufferedReader is = new BufferedReader(new InputStreamReader(System.in));
+            //String msg1 = is.readLine();
+            //byte[] message = msg.getBytes();
+            
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(4 * 1024);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+            objectOutputStream.writeObject(proposal);
+            byte[] message = byteArrayOutputStream.toByteArray();
+            // Get the internet address of the specified host
+            //InetAddress address = address;//InetAddress.getByName(host);
+            // Initialize a datagram packet with data and address
+            DatagramPacket packet = new DatagramPacket(message,message.length, address, port);
+            dsocket = new DatagramSocket();
+            dsocket.setBroadcast(b);
+            dsocket.send(packet);
+            dsocket.close();
+            
+        } catch (Exception e) {
+            System.err.println(e);
+        }
     }
 }

@@ -16,6 +16,7 @@ import java.util.Scanner;
 import chatsystem.*;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import signals.FileProposal;
 
 /**
  *
@@ -49,6 +50,10 @@ public class ChatSystem {
     public void sendMessage(String msg) {
         ni.sendMessage(msg);
     }
+    
+    public void sendProposal(String File, long size) {
+        ni.sendProposal(File, size);
+    }
 
     public void showMessage(TextMessage msg) {
             gui.setMsg(msg.getFrom(),msg.getMessage());
@@ -69,6 +74,10 @@ public class ChatSystem {
         gui.rmvUser(goodbye.getUsername());
     }
     
+    public void showProposal(FileProposal fileproposal) {
+        gui.setMsg(fileproposal.getFrom(), "Received a File proposal from "+fileproposal.getFrom());
+    }
+    
     
     public String getUsername(){
         return this.gui.getUser();
@@ -81,4 +90,6 @@ public class ChatSystem {
     public void setRmteIpAddresses(ArrayList<String> addresses) throws UnknownHostException{
         ni.setRmteAddressesString(addresses);
     }
+
+    
 }

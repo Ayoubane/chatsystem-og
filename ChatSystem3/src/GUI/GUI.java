@@ -60,6 +60,11 @@ public class GUI extends Thread {
     public void performSend(String msg) {
         controller.sendMessage(msg);
     }
+    
+    //WARNING: Not in the SRS
+    public void performSendProposal(String File, long size){
+        controller.sendProposal(File, size);
+    }
 
     public void run() {
         new ConnectWindow(GUI.this).setVisible(true);

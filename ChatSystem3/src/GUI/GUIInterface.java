@@ -16,6 +16,8 @@ public interface GUIInterface {
     public void disconnectOK();
     public void updateUserList();
     public void performSend();
+    public void performSendProposal();      //WARNING NOT IN THE SRS
+    public void performSendFile();          //WARNING NOT IN THE SRS
     public void displayMsg();
     
 }
