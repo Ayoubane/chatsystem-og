@@ -99,7 +99,7 @@ public class NI implements NiInterface {
             to.add(controller.getUsername());
             TextMessage message=new TextMessage(msg,controller.getUsername(),to);
             for(int i=0; i<rmteAddresses.size(); i++){
-                udpSender.sendMsg(message, remoteIpAdress,false);
+                udpSender.sendMsg(message, rmteAddresses.get(i),false);
             }
         }
     }

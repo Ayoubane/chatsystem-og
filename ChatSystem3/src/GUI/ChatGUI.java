@@ -6,11 +6,13 @@
 package GUI;
 
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
@@ -217,30 +219,50 @@ public class ChatGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        JFileChooser fc = new JFileChooser();
+        int returnVal = fc.showOpenDialog(this);
+        File file = null;
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            file = fc.getSelectedFile();
+            //Now you have your file to do whatever you want to do
+        } else {
+            //User did not choose a valid file
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         //Open a new window
-        ChatGUI groupe=new ChatGUI(gui, false);
+        final ChatGUI groupe=new ChatGUI(gui, false);
         gui.addGroupe(groupe);
         groupe.editJlabel1("Groupe de chat N° " + gui.getNbGroupe());
         groupe.jButton3.setEnabled(false);
         groupe.setVisible(true);
         //Actions on jList
-        groupe.jList1.setModel(model);
+        
         groupe.jList1.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        listSelectionListener = new ListSelectionListener() {
+        for (int i=0; i<model.getSize(); i++) {
+            groupe.model.addElement(model.elementAt(i));
+        }
+        groupe.jList1.setSelectedIndex(-1);
+        ListSelectionListener listSelectionListener1 = new ListSelectionListener() {
                 public void valueChanged(ListSelectionEvent listSelectionEvent) {
-                    int[] selectedIx = jList1.getSelectedIndices();
-                    ArrayList<String> grp=new ArrayList();
-                    for (int i = 0; i < selectedIx.length; i++) {
-                        grp.add((String) jList1.getModel().getElementAt(selectedIx[i]));
+                    if(!listSelectionEvent.getValueIsAdjusting()){
+                        int[] selectedIx = groupe.jList1.getSelectedIndices();
+                        ArrayList<String> grp=new ArrayList();
+                        System.out.println("length: "+selectedIx.length);
+                        for (int i = 0; i < selectedIx.length; i++) {
+                            grp.add((String) groupe.jList1.getModel().getElementAt(selectedIx[i]));
+                            System.out.println("ChatGUI: "+(String) groupe.jList1.getModel().getElementAt(selectedIx[i]));
+                        }
+                        try {
+                            gui.setRmteIpAddresses(grp);
+                        } catch (UnknownHostException ex) {
+                            Logger.getLogger(ChatGUI.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
-                    gui.setRmteIpAddresses(grp);
                 }
             };
-            groupe.jList1.addListSelectionListener(listSelectionListener);
+            groupe.jList1.addListSelectionListener(listSelectionListener1);
         
     }//GEN-LAST:event_jButton3ActionPerformed
 
