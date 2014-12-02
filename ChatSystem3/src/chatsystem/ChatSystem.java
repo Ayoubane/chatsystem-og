@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.Scanner;
 import chatsystem.*;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 /**
  *
@@ -75,5 +76,9 @@ public class ChatSystem {
     
     public void setRemoteIpAdress(String username) throws UnknownHostException{
         ni.setRemoteIpAdressString(username);
+    }
+    
+    public void setRmteIpAddresses(ArrayList<String> addresses) throws UnknownHostException{
+        ni.setRmteAddressesString(addresses);
     }
 }

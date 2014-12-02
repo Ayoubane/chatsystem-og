@@ -32,10 +32,12 @@ public class NI implements NiInterface {
     InetAddress localIpAdress;
     InetAddress broadcast;
     InetAddress remoteIpAdress;
+    ArrayList<InetAddress> rmteAddresses=new ArrayList();
     
     String localIpAdressString;
     String broadcastString;
     private String remoteIpAdressString;
+    private ArrayList<String> rmteAddressesString=new ArrayList();
 
     public NI(ChatSystem controller, int portr, int ports) {
         udpSender = new UDPSender(this, ports);
@@ -45,7 +47,7 @@ public class NI implements NiInterface {
         this.controller = controller;
         try {
             localIpAdress = InetAddress.getByName("localhost");
-            getIpOfInterfac("wlan0");
+            getIpOfInterfac("eth8");
             System.out.println(localIpAdressString+ "/"+ broadcastString);
         } catch (UnknownHostException ex) {
             Logger.getLogger(NI.class.getName()).log(Level.SEVERE, null, ex);
@@ -86,10 +88,20 @@ public class NI implements NiInterface {
     }
 
     public void sendMessage(String msg) {
-        ArrayList<String> to=new ArrayList<>();
-        to.add(controller.getUsername());
-        TextMessage message=new TextMessage(msg,controller.getUsername(),to);
-        udpSender.sendMsg(message, remoteIpAdress,true);
+        if(rmteAddresses.isEmpty()){
+            ArrayList<String> to=new ArrayList<>();
+            to.add(controller.getUsername());
+            TextMessage message=new TextMessage(msg,controller.getUsername(),to);
+            udpSender.sendMsg(message, remoteIpAdress,false);
+        }
+        else{
+            ArrayList<String> to=new ArrayList<>();
+            to.add(controller.getUsername());
+            TextMessage message=new TextMessage(msg,controller.getUsername(),to);
+            for(int i=0; i<rmteAddresses.size(); i++){
+                udpSender.sendMsg(message, remoteIpAdress,false);
+            }
+        }
     }
 
     @Override
@@ -112,6 +124,15 @@ public class NI implements NiInterface {
         InetAddress adress = InetAddress.getByName(splited[1]);
         return adress;
     }
+    
+    public void getIpAdresssFromUsernames(ArrayList<String> usernames) throws UnknownHostException {
+        for(int i=0; i<usernames.size(); i++){
+            String[] splited = usernames.get(i).split("@");
+            InetAddress adress = InetAddress.getByName(splited[1]);
+            this.rmteAddresses.add(adress);
+        }
+    }
+    
     public String getNameFromUsername(String username) throws UnknownHostException {
         String[] splited = username.split("@");
         return splited[0];
@@ -133,8 +154,23 @@ public class NI implements NiInterface {
         this.remoteIpAdressString = remoteIpAdressString;
         setRemoteIpAdress(getIpAdressFromUsername(remoteIpAdressString));
     }
-    
-    
+
+    public ArrayList<InetAddress> getRmteAddresses() {
+        return rmteAddresses;
+    }
+
+    public void setRmteAddresses(ArrayList<InetAddress> rmteAddresses) {
+        this.rmteAddresses = rmteAddresses;
+    }
+
+    public ArrayList<String> getRmteAddressesString() {
+        return rmteAddressesString;
+    }
+
+    public void setRmteAddressesString(ArrayList<String> rmteAddressesString) throws UnknownHostException {
+        this.rmteAddressesString = rmteAddressesString;
+        getIpAdresssFromUsernames(rmteAddressesString);
+    }
     
 
     private void getIpOfInterfac(String inter) throws UnknownHostException {
