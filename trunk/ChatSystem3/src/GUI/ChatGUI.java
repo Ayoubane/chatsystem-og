@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
@@ -224,9 +225,11 @@ public class ChatGUI extends javax.swing.JFrame {
         File file = null;
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             file = fc.getSelectedFile();
-            //Now you have your file to do whatever you want to do
+            String fileName=file.getName();
+            long Size = file.getTotalSpace();
+            gui.performSendProposal(fileName, Size);
         } else {
-            //User did not choose a valid file
+            JOptionPane.showMessageDialog(this, "Please Chose a valid File!", "Warning", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 

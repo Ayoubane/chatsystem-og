@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import signals.FileProposal;
 
 /**
  *
@@ -69,7 +70,9 @@ public class NI implements NiInterface {
             controller.showHelloOK((HelloOK) obj);
         } else if (obj instanceof Goodbye) {
             controller.showGoodbye((Goodbye) obj);
-        } else {
+        } else if(obj instanceof FileProposal){
+            controller.showProposal((FileProposal) obj);
+        }else {
             System.out.println("ERROR 404: Packet type not found!");
 
         }
@@ -86,15 +89,36 @@ public class NI implements NiInterface {
         Goodbye goodbye = new Goodbye(userName+"@"+localIpAdressString);
         udpSender.sendGoodbye(goodbye, broadcast, true);
     }
+    
+    public void sendProposal(String File, long size) {
+        if(rmteAddresses.isEmpty()){
+            //UNICAST
+            ArrayList<String> to=new ArrayList<>();
+            to.add(controller.getUsername());
+            FileProposal proposal= new FileProposal(File, size, controller.getUsername(), to);
+            udpSender.sendProposal(proposal, remoteIpAdress, false);
+        }
+        else{
+            //MULTICAST
+            ArrayList<String> to=new ArrayList<>();
+            to.add(controller.getUsername());
+            FileProposal proposal= new FileProposal(File, size, controller.getUsername(), to);
+            for(int i=0; i<rmteAddresses.size(); i++){
+                udpSender.sendProposal(proposal, rmteAddresses.get(i),false);
+            }
+        }
+    }
 
     public void sendMessage(String msg) {
         if(rmteAddresses.isEmpty()){
+            //UNICAST
             ArrayList<String> to=new ArrayList<>();
             to.add(controller.getUsername());
             TextMessage message=new TextMessage(msg,controller.getUsername(),to);
             udpSender.sendMsg(message, remoteIpAdress,false);
         }
         else{
+            //MULTICAST
             ArrayList<String> to=new ArrayList<>();
             to.add(controller.getUsername());
             TextMessage message=new TextMessage(msg,controller.getUsername(),to);
