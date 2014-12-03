@@ -40,9 +40,10 @@ public class ConnectWindow extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("OA ChatSystem v2.0");
 
         jLabel1.setFont(new java.awt.Font("Castellar", 3, 24)); // NOI18N
-        jLabel1.setText("OA ChatSystem v1.0");
+        jLabel1.setText("OA ChatSystem v2.0");
 
         jLabel2.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
         jLabel2.setText("Username :");
