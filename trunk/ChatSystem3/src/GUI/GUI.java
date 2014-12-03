@@ -88,6 +88,10 @@ public class GUI extends Thread {
         controller.setRemoteIpAdress(username);
     }
     
+    public void showChoice(String fileName, String from) {
+        chatGui.showProposal(fileName, from);
+    }
+    
     //---------------------------------------//
     public void playSound() {
         try {
@@ -108,9 +112,7 @@ public class GUI extends Thread {
     }
     //--------------------------------------//
 
-    public void showChoice(String fileName, String from) {
-        ChatGUI.showProposal(fileName, from);
-    }
+    
 
     
 
