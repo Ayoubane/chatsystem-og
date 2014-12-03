@@ -238,7 +238,8 @@ public class ChatGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+        GroupeChoice choice=new GroupeChoice(this, rootPaneCheckingEnabled);
+        choice.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jTextArea2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea2KeyPressed
