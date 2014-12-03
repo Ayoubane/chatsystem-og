@@ -8,10 +8,10 @@ package GUI;
 import chatsystem.ChatSystem;
 import java.io.File;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -21,7 +21,6 @@ public class GUI extends Thread {
 
     ChatSystem controller;
     private ChatGUI chatGui;
-    private ArrayList<ChatGUI> groupe =new ArrayList();  // Pour la conversation entre groupe
     private String msg;
     private String username;
 
@@ -44,7 +43,7 @@ public class GUI extends Thread {
             chatGui.getjTextArea1().append(msg);
             chatGui.getjTextArea1().append("\n");
         }
-        playSound();
+//        playSound();
     }
 
     public void performConnect(String userName) {
@@ -61,9 +60,8 @@ public class GUI extends Thread {
         controller.sendMessage(msg);
     }
     
-    //WARNING: Not in the SRS
-    public void performSendProposal(String File, long size){
-        controller.sendProposal(File, size);
+    void performSendProposal(String Name, long size) {
+        controller.sendProposal(Name, size);
     }
 
     public void run() {
@@ -90,24 +88,6 @@ public class GUI extends Thread {
         controller.setRemoteIpAdress(username);
     }
     
-    public void setRmteIpAddresses(ArrayList<String> addresses) throws UnknownHostException{
-        controller.setRmteIpAddresses(addresses);
-    }
-
-    public ArrayList<ChatGUI> getGroupe() {
-        return groupe;
-    }
-
-    public void addGroupe(ChatGUI grp) {
-        this.groupe.add(grp);
-    }
-    
-    public int getNbGroupe(){
-        return this.groupe.size();
-    }
-    
-    
-    
     //---------------------------------------//
     public void playSound() {
         try {
@@ -127,5 +107,11 @@ public class GUI extends Thread {
         }
     }
     //--------------------------------------//
+
+    public void showChoice(String fileName, String from) {
+        ChatGUI.showProposal(fileName, from);
+    }
+
+    
 
 }

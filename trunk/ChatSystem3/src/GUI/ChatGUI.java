@@ -8,7 +8,6 @@ package GUI;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -16,7 +15,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
-import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -26,34 +24,43 @@ import javax.swing.event.ListSelectionListener;
  */
 public class ChatGUI extends javax.swing.JFrame {
 
+    
+    
+
     /**
      * Creates new form ChatGUI
      */
     GUI gui;
     DefaultListModel model = new DefaultListModel();
 
-    public ChatGUI(final GUI gui, boolean unigroup) {
+    public ChatGUI(final GUI gui) {
         this.gui = gui;
         initComponents();
-        if(unigroup==true){
-            listSelectionListener = new ListSelectionListener() {
-                public void valueChanged(ListSelectionEvent listSelectionEvent) {
-                    try {
-                        gui.setRemoteIpAdress(jList1.getSelectedValue().toString());
-                        String username=jList1.getSelectedValue().toString();
-                        String[] ipadress=username.split("@");
-                        jLabel2.setText(ipadress[1]);
-                    } catch (UnknownHostException ex) {
-                        Logger.getLogger(ChatGUI.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+        
+        listSelectionListener = new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent listSelectionEvent) {
+                try {
+                    gui.setRemoteIpAdress(jList1.getSelectedValue().toString());
+                    String username=jList1.getSelectedValue().toString();
+                    String[] ipadress=username.split("@");
+                    jLabel2.setText(ipadress[1]);
+                } catch (UnknownHostException ex) {
+                    Logger.getLogger(ChatGUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            };
-            jList1.addListSelectionListener(listSelectionListener);
-        }
+            }
+        };
+       jList1.addListSelectionListener(listSelectionListener);
     }
 
     public void editJlabel1(String s) {
         jLabel1.setText(s);
+    }
+    
+    static void showProposal(String fileName, String from) {
+        final JOptionPane optionPane = new JOptionPane("Accept the file "+ fileName +"From " + from + " ?",
+                                                        JOptionPane.QUESTION_MESSAGE,
+                                                        JOptionPane.YES_NO_OPTION);
+        optionPane.setVisible(true);
     }
 
     /*public void editText1(String msg){
@@ -152,10 +159,8 @@ public class ChatGUI extends javax.swing.JFrame {
                         .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jButton3)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -175,10 +180,10 @@ public class ChatGUI extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(3, 3, 3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -188,7 +193,7 @@ public class ChatGUI extends javax.swing.JFrame {
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel2)
-                        .addGap(10, 10, 10)
+                        .addGap(7, 7, 7)
                         .addComponent(jButton3))))
         );
 
@@ -212,7 +217,7 @@ public class ChatGUI extends javax.swing.JFrame {
 
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        jTextArea1.append(gui.getUser() + " : "); // Or me ;)
+        jTextArea1.append(gui.getUser() + ": "); // Or me ;)
         jTextArea1.append(jTextArea2.getText());
         jTextArea1.append("\n");
         gui.performSend(jTextArea2.getText());
@@ -221,57 +226,24 @@ public class ChatGUI extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         JFileChooser fc = new JFileChooser();
-        int returnVal = fc.showOpenDialog(this);
+        int returnVal = fc.showOpenDialog(this); //Where frame is the parent component
+
         File file = null;
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             file = fc.getSelectedFile();
-            String fileName=file.getName();
-            long Size = file.getTotalSpace();
-            gui.performSendProposal(fileName, Size);
+            gui.performSendProposal(file.getName(), file.getTotalSpace());
         } else {
-            JOptionPane.showMessageDialog(this, "Please Chose a valid File!", "Warning", JOptionPane.WARNING_MESSAGE);
+            //User did not choose a valid file
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        //Open a new window
-        final ChatGUI groupe=new ChatGUI(gui, false);
-        gui.addGroupe(groupe);
-        groupe.editJlabel1("Groupe de chat N° " + gui.getNbGroupe());
-        groupe.jButton3.setEnabled(false);
-        groupe.setVisible(true);
-        //Actions on jList
-        
-        groupe.jList1.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        for (int i=0; i<model.getSize(); i++) {
-            groupe.model.addElement(model.elementAt(i));
-        }
-        groupe.jList1.setSelectedIndex(-1);
-        ListSelectionListener listSelectionListener1 = new ListSelectionListener() {
-                public void valueChanged(ListSelectionEvent listSelectionEvent) {
-                    if(!listSelectionEvent.getValueIsAdjusting()){
-                        int[] selectedIx = groupe.jList1.getSelectedIndices();
-                        ArrayList<String> grp=new ArrayList();
-                        System.out.println("length: "+selectedIx.length);
-                        for (int i = 0; i < selectedIx.length; i++) {
-                            grp.add((String) groupe.jList1.getModel().getElementAt(selectedIx[i]));
-                            System.out.println("ChatGUI: "+(String) groupe.jList1.getModel().getElementAt(selectedIx[i]));
-                        }
-                        try {
-                            gui.setRmteIpAddresses(grp);
-                        } catch (UnknownHostException ex) {
-                            Logger.getLogger(ChatGUI.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                }
-            };
-            groupe.jList1.addListSelectionListener(listSelectionListener1);
-        
+        // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jTextArea2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea2KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            jTextArea1.append(gui.getUser()+" : ");
+            jTextArea1.append("Me :  ");
             jTextArea1.append(jTextArea2.getText());
             jTextArea1.append("\n");
             gui.performSend(jTextArea2.getText());
@@ -280,7 +252,7 @@ public class ChatGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextArea2KeyPressed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        jTextArea1.append(gui.getUser() + " : ");
+        jTextArea1.append("Me :  ");
         jTextArea1.append(jTextArea2.getText());
         jTextArea1.append("\n");
         gui.performDisconnect(gui.getUser());

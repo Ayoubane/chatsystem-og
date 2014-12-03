@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.util.Scanner;
 import chatsystem.*;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import signals.FileProposal;
 
 /**
@@ -51,8 +50,8 @@ public class ChatSystem {
         ni.sendMessage(msg);
     }
     
-    public void sendProposal(String File, long size) {
-        ni.sendProposal(File, size);
+    public void sendProposal(String Name, long size) {
+        ni.sendFileProposal(Name, size);
     }
 
     public void showMessage(TextMessage msg) {
@@ -74,8 +73,10 @@ public class ChatSystem {
         gui.rmvUser(goodbye.getUsername());
     }
     
-    public void showProposal(FileProposal fileproposal) {
-        gui.setMsg(fileproposal.getFrom(), "Received a File proposal from "+fileproposal.getFrom());
+    
+    public void showFileProposal(FileProposal fileProposal) {
+        gui.setMsg(fileProposal.getFrom(),"Hey, Wanna get the file "+fileProposal.getFileName()+ " from "+fileProposal.getFrom()+" ?");
+        gui.showChoice(fileProposal.getFileName(),fileProposal.getFrom());
     }
     
     
@@ -86,10 +87,7 @@ public class ChatSystem {
     public void setRemoteIpAdress(String username) throws UnknownHostException{
         ni.setRemoteIpAdressString(username);
     }
-    
-    public void setRmteIpAddresses(ArrayList<String> addresses) throws UnknownHostException{
-        ni.setRmteAddressesString(addresses);
-    }
 
     
+
 }
