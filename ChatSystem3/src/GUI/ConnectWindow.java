@@ -104,7 +104,7 @@ public class ConnectWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        ChatGUI cgui = new ChatGUI(gui, true);
+        ChatGUI cgui = new ChatGUI(gui);
         gui.setChatGui(cgui);
         cgui.editJlabel1("Bienvenue " + jTextArea1.getText());
         cgui.setVisible(true);
@@ -118,7 +118,7 @@ public class ConnectWindow extends javax.swing.JFrame {
 
     private void jTextArea1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            ChatGUI cgui = new ChatGUI(gui, true);
+            ChatGUI cgui = new ChatGUI(gui);
             gui.setChatGui(cgui);
             cgui.editJlabel1("Bienvenue " + jTextArea1.getText());
             cgui.setVisible(true);

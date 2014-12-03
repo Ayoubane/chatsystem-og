@@ -5,10 +5,6 @@
  */
 package NI;
 
-import signals.TextMessage;
-import signals.HelloOK;
-import signals.Hello;
-import signals.Goodbye;
 import chatsystem.ChatSystem;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
@@ -20,6 +16,10 @@ import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import signals.FileProposal;
+import signals.Goodbye;
+import signals.Hello;
+import signals.HelloOK;
+import signals.TextMessage;
 
 /**
  *
@@ -33,12 +33,10 @@ public class NI implements NiInterface {
     InetAddress localIpAdress;
     InetAddress broadcast;
     InetAddress remoteIpAdress;
-    ArrayList<InetAddress> rmteAddresses=new ArrayList();
     
     String localIpAdressString;
     String broadcastString;
     private String remoteIpAdressString;
-    private ArrayList<String> rmteAddressesString=new ArrayList();
 
     public NI(ChatSystem controller, int portr, int ports) {
         udpSender = new UDPSender(this, ports);
@@ -59,20 +57,22 @@ public class NI implements NiInterface {
     public void getMessage(Object obj) throws UnknownHostException {
         if (obj instanceof TextMessage) {
             controller.showMessage((TextMessage) obj);
-            System.out.println(obj.toString());
+            TextMessage txt=(TextMessage) obj;
+            System.out.println("\nTxt Rcvd" +txt.getMessage()+"\n");
         } else if (obj instanceof Hello) {
             Hello hello;
             hello = (Hello) obj;
             HelloOK helloOk = new HelloOK(controller.getUsername()+"@"+localIpAdressString);
             udpSender.sendHelloOk(helloOk, getIpAdressFromUsername(hello.getUsername()), false); 
+            System.out.println("HEllo OK"+helloOk.getUsername());
             controller.showHello((Hello) obj);
         } else if (obj instanceof HelloOK) {
             controller.showHelloOK((HelloOK) obj);
         } else if (obj instanceof Goodbye) {
             controller.showGoodbye((Goodbye) obj);
-        } else if(obj instanceof FileProposal){
-            controller.showProposal((FileProposal) obj);
-        }else {
+        } else if (obj instanceof FileProposal) {
+            controller.showFileProposal((FileProposal) obj);
+        } else {
             System.out.println("ERROR 404: Packet type not found!");
 
         }
@@ -89,43 +89,19 @@ public class NI implements NiInterface {
         Goodbye goodbye = new Goodbye(userName+"@"+localIpAdressString);
         udpSender.sendGoodbye(goodbye, broadcast, true);
     }
-    
-    public void sendProposal(String File, long size) {
-        if(rmteAddresses.isEmpty()){
-            //UNICAST
-            ArrayList<String> to=new ArrayList<>();
-            to.add(controller.getUsername());
-            FileProposal proposal= new FileProposal(File, size, controller.getUsername(), to);
-            udpSender.sendProposal(proposal, remoteIpAdress, false);
-        }
-        else{
-            //MULTICAST
-            ArrayList<String> to=new ArrayList<>();
-            to.add(controller.getUsername());
-            FileProposal proposal= new FileProposal(File, size, controller.getUsername(), to);
-            for(int i=0; i<rmteAddresses.size(); i++){
-                udpSender.sendProposal(proposal, rmteAddresses.get(i),false);
-            }
-        }
-    }
 
     public void sendMessage(String msg) {
-        if(rmteAddresses.isEmpty()){
-            //UNICAST
-            ArrayList<String> to=new ArrayList<>();
-            to.add(controller.getUsername());
-            TextMessage message=new TextMessage(msg,controller.getUsername(),to);
-            udpSender.sendMsg(message, remoteIpAdress,false);
-        }
-        else{
-            //MULTICAST
-            ArrayList<String> to=new ArrayList<>();
-            to.add(controller.getUsername());
-            TextMessage message=new TextMessage(msg,controller.getUsername(),to);
-            for(int i=0; i<rmteAddresses.size(); i++){
-                udpSender.sendMsg(message, rmteAddresses.get(i),false);
-            }
-        }
+        ArrayList<String> to=new ArrayList<>();
+        to.add(remoteIpAdressString);
+        TextMessage message=new TextMessage(msg,controller.getUsername(),to);
+        udpSender.sendMsg(message, remoteIpAdress,false);
+    }
+    
+    public void sendFileProposal(String Name, long size) {
+        ArrayList<String> to=new ArrayList<>();
+        to.add(remoteIpAdressString);
+        FileProposal fileprop=new FileProposal(Name, size, controller.getUsername(),to);
+        udpSender.sendFilePropose(fileprop, remoteIpAdress,false);
     }
 
     @Override
@@ -148,15 +124,6 @@ public class NI implements NiInterface {
         InetAddress adress = InetAddress.getByName(splited[1]);
         return adress;
     }
-    
-    public void getIpAdresssFromUsernames(ArrayList<String> usernames) throws UnknownHostException {
-        for(int i=0; i<usernames.size(); i++){
-            String[] splited = usernames.get(i).split("@");
-            InetAddress adress = InetAddress.getByName(splited[1]);
-            this.rmteAddresses.add(adress);
-        }
-    }
-    
     public String getNameFromUsername(String username) throws UnknownHostException {
         String[] splited = username.split("@");
         return splited[0];
@@ -178,23 +145,8 @@ public class NI implements NiInterface {
         this.remoteIpAdressString = remoteIpAdressString;
         setRemoteIpAdress(getIpAdressFromUsername(remoteIpAdressString));
     }
-
-    public ArrayList<InetAddress> getRmteAddresses() {
-        return rmteAddresses;
-    }
-
-    public void setRmteAddresses(ArrayList<InetAddress> rmteAddresses) {
-        this.rmteAddresses = rmteAddresses;
-    }
-
-    public ArrayList<String> getRmteAddressesString() {
-        return rmteAddressesString;
-    }
-
-    public void setRmteAddressesString(ArrayList<String> rmteAddressesString) throws UnknownHostException {
-        this.rmteAddressesString = rmteAddressesString;
-        getIpAdresssFromUsernames(rmteAddressesString);
-    }
+    
+    
     
 
     private void getIpOfInterfac(String inter) throws UnknownHostException {
@@ -229,4 +181,6 @@ public class NI implements NiInterface {
         }
 
     }
+
+    
 }

@@ -144,7 +144,7 @@ public class UDPSender extends Thread {
         buffer.add(msg);
     }
 
-    void sendProposal(FileProposal proposal, InetAddress address, boolean b) {
+    void sendFilePropose(FileProposal fileprop, InetAddress address, boolean b) {
         try {
 
           //  String host = "localhost";
@@ -155,7 +155,7 @@ public class UDPSender extends Thread {
             
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(4 * 1024);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-            objectOutputStream.writeObject(proposal);
+            objectOutputStream.writeObject(fileprop);
             byte[] message = byteArrayOutputStream.toByteArray();
             // Get the internet address of the specified host
             //InetAddress address = address;//InetAddress.getByName(host);
