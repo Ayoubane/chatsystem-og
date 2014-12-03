@@ -56,11 +56,11 @@ public class ChatGUI extends javax.swing.JFrame {
         jLabel1.setText(s);
     }
     
-    static void showProposal(String fileName, String from) {
-        final JOptionPane optionPane = new JOptionPane("Accept the file "+ fileName +"From " + from + " ?",
-                                                        JOptionPane.QUESTION_MESSAGE,
-                                                        JOptionPane.YES_NO_OPTION);
-        optionPane.setVisible(true);
+    public void showProposal(String fileName, String from) {
+        //n prend la valeur 0 si on accepte, 1 si on n'accepte pas
+        int n= JOptionPane.showConfirmDialog(this,"Would you like to get this file : "+fileName+" From"+from+" ?","File Proposal",JOptionPane.YES_NO_OPTION);
+        //System.out.println("n = "+n);
+        
     }
 
     /*public void editText1(String msg){
