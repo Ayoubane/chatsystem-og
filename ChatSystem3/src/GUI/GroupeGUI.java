@@ -38,6 +38,7 @@ public class GroupeGUI extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Group Chat - OA ChatSystem v2.0");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setPreferredSize(new java.awt.Dimension(549, 430));
         setResizable(false);

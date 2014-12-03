@@ -90,7 +90,11 @@ public class ChatGUI extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("OA ChatSystem v2.0");
+        setBackground(new java.awt.Color(102, 102, 102));
+        setForeground(new java.awt.Color(102, 102, 102));
 
+        jPanel1.setForeground(new java.awt.Color(102, 102, 102));
         jPanel1.setToolTipText("");
         jPanel1.setName(""); // NOI18N
 
@@ -207,7 +211,7 @@ public class ChatGUI extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );

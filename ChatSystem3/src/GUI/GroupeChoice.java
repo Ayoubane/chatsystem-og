@@ -41,6 +41,7 @@ public class GroupeChoice extends java.awt.Dialog {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
+        setTitle("OA ChatSystem v2.0");
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 closeDialog(evt);
