@@ -46,7 +46,7 @@ public class NI implements NiInterface {
         this.controller = controller;
         try {
             localIpAdress = InetAddress.getByName("localhost");
-            getIpOfInterfac("eth8");
+            getIpOfInterfac("wlan0");
             System.out.println(localIpAdressString+ "/"+ broadcastString);
         } catch (UnknownHostException ex) {
             Logger.getLogger(NI.class.getName()).log(Level.SEVERE, null, ex);
