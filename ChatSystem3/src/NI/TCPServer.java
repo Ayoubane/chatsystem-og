@@ -30,7 +30,7 @@ public class TCPServer extends Thread {
             // receive file
             byte[] mybytearray = new byte[FILE_SIZE];
             InputStream is = sock.getInputStream();
-            fos = new FileOutputStream(FILE_TO_RECEIVED);
+            fos = new FileOutputStream(FILE_TO_RECEIVED+fileName);
             bos = new BufferedOutputStream(fos);
             bytesRead = is.read(mybytearray, 0, mybytearray.length);
             current = bytesRead;
