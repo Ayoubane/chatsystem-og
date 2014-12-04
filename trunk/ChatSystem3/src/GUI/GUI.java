@@ -44,7 +44,7 @@ public class GUI extends Thread {
             chatGui.getjTextArea1().append(msg);
             chatGui.getjTextArea1().append("\n");
         }
-        playSound();
+       // playSound();
     }
 
     public void performConnect(String userName) {

@@ -245,7 +245,7 @@ public class ChatGUI extends javax.swing.JFrame {
         File file = null;
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             file = fc.getSelectedFile();
-            gui.performSendProposal(file.getName(), file.getTotalSpace());
+            gui.performSendProposal(file.getAbsolutePath(), file.getTotalSpace());
         } else {
             //User did not choose a valid file
         }

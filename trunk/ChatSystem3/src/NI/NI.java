@@ -110,7 +110,10 @@ public class NI implements NiInterface {
     public void sendFileProposal(String Name, long size) {
         ArrayList<String> to=new ArrayList<>();
         to.add(remoteIpAdressString);
-        FileProposal fileprop=new FileProposal(Name, size, controller.getUsername(),to);
+        System.out.println("fole name="+Name);
+        String[] fileName=Name.split("/");
+        
+        FileProposal fileprop=new FileProposal(fileName[fileName.length-1], size, controller.getUsername(),to);
         udpSender.sendFilePropose(fileprop, remoteIpAdress,false);
         tcpSender.RUN=true;
         tcpSender.sendFileTransfer(Name);
