@@ -7,6 +7,7 @@ package GUI;
 
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,6 +61,15 @@ public class ChatGUI extends javax.swing.JFrame {
         //n prend la valeur 0 si on accepte, 1 si on n'accepte pas
         int n= JOptionPane.showConfirmDialog(this,"Would you like to get this file : "+fileName+" From"+from+" ?","File Proposal",JOptionPane.YES_NO_OPTION);
         //System.out.println("n = "+n);
+        if(n==0){
+            try {
+                gui.acceptFileTransfer(fileName,from);
+            } catch (IOException ex) {
+                Logger.getLogger(ChatGUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }else{
+            //we canceled the transfer
+        }
         
     }
 

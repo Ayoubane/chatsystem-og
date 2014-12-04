@@ -50,14 +50,25 @@ public class ChatSystem {
         ni.sendMessage(msg);
     }
     
+     public void showMessage(TextMessage msg) {
+            gui.setMsg(msg.getFrom(),msg.getMessage());
+    }
+    
+    /*
+    *---File Transfer
+    */
     public void sendProposal(String Name, long size) {
         ni.sendFileProposal(Name, size);
     }
 
-    public void showMessage(TextMessage msg) {
-            gui.setMsg(msg.getFrom(),msg.getMessage());
+    public void acceptFileTransfer(String fileName,String from) throws IOException {
+        ni.acceptFileTransfer(fileName,from);
     }
+   
     
+    /*
+    Hello
+    */
     public void showHello(Hello hello){
         gui.setMsg(hello.getUsername(),"Hello, I'm "+hello.getUsername());
         gui.addUser(hello.getUsername());
@@ -81,7 +92,7 @@ public class ChatSystem {
     
     
     public String getUsername(){
-        return this.gui.getUser();
+        return this.gui.getUser()+"@"+ni.getLocalIpAdressString();
     }
     
     public void setRemoteIpAdress(String username) throws UnknownHostException{

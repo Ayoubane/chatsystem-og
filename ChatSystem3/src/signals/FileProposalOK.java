@@ -1,14 +1,23 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package signals;
 
+/**
+ *
+ * @author root
+ */
 import java.util.ArrayList;
 
-public class FileProposal extends Signal {
+public class FileProposalOK extends Signal {
 	private String fileName;
 	private long size;
 	private String from;
 	private ArrayList<String> to;
 	
-	public FileProposal(String fileName, long size, String from, ArrayList<String> to) {
+	public FileProposalOK(String fileName, long size, String from, ArrayList<String> to) {
 		super();
 		this.fileName = fileName;
 		this.size = size;
@@ -45,3 +54,4 @@ public class FileProposal extends Signal {
 
 	
 }
+

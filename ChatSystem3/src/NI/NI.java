@@ -6,6 +6,7 @@
 package NI;
 
 import chatsystem.ChatSystem;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
@@ -16,6 +17,7 @@ import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import signals.FileProposal;
+import signals.FileProposalOK;
 import signals.Goodbye;
 import signals.Hello;
 import signals.HelloOK;
@@ -29,6 +31,8 @@ public class NI implements NiInterface {
 
     UDPSender udpSender;
     UDPServer udpServer;
+    TCPSender tcpSender;
+    TCPServer tcpServer;
     ChatSystem controller;
     InetAddress localIpAdress;
     InetAddress broadcast;
@@ -41,6 +45,8 @@ public class NI implements NiInterface {
     public NI(ChatSystem controller, int portr, int ports) {
         udpSender = new UDPSender(this, ports);
         udpServer = new UDPServer(this, portr);
+        tcpServer= new TCPServer();
+        tcpSender= new TCPSender();
         udpServer.start();
         udpSender.start();
         this.controller = controller;
@@ -97,11 +103,26 @@ public class NI implements NiInterface {
         udpSender.sendMsg(message, remoteIpAdress,false);
     }
     
+    
+    /*
+    Files
+    */
     public void sendFileProposal(String Name, long size) {
         ArrayList<String> to=new ArrayList<>();
         to.add(remoteIpAdressString);
         FileProposal fileprop=new FileProposal(Name, size, controller.getUsername(),to);
         udpSender.sendFilePropose(fileprop, remoteIpAdress,false);
+        tcpSender.RUN=true;
+        tcpSender.sendFileTransfer(Name);
+        tcpSender.start();
+        
+    }
+    
+    public void acceptFileTransfer(String fileName,String from) {
+        tcpServer.start();
+        FileProposalOK fileProposalOK=new FileProposalOK(fileName, 0, controller.getUsername(), null);
+        tcpServer.acceptFileTransfer(fileName); //A Server will be opened to send the file
+        
     }
 
     @Override
@@ -129,6 +150,10 @@ public class NI implements NiInterface {
         return splited[0];
     }
 
+    public String getLocalIpAdressString() {
+        return localIpAdressString;
+    }
+    
     public InetAddress getRemoteIpAdress() {
         return remoteIpAdress;
     }
