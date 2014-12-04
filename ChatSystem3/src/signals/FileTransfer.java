@@ -1,21 +1,18 @@
 package signals;
 
-import java.io.File;
-import java.io.Serializable;
-
 public class FileTransfer extends Signal {
-	private File file;
+        private byte[] file;
 
-	public FileTransfer(File file) {
-		super();
-		this.file = file;
-	}
+        public FileTransfer(byte [] file) {
+                super();
+                this.file = file;
+        }
 
-	public File getFile() {
-		return file;
-	}
+        public byte[] getFile() {
+                return file;
+        }
 
-	public void setFile(File file) {
-		this.file = file;
-	}
+        public void setFile(byte[] file) {
+                this.file = file;
+        }
 }
