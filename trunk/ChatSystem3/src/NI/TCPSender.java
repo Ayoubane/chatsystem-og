@@ -1,30 +1,76 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package NI;
 
-import java.io.*;
-import java.net.*;
-/**
- *
- * @author Ayoub
- */
-public class TCPSender extends Thread{
-    public static void main(String argv[]) throws Exception
-    {
-        String sentence;
-        String modifiedSentence;
-        BufferedReader inFromUser = new BufferedReader( new InputStreamReader(System.in));
-        Socket clientSocket = new Socket("localhost", 6789);
-        DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
-        BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        sentence = inFromUser.readLine();
-        outToServer.writeBytes(sentence + '\n');
-        modifiedSentence = inFromServer.readLine();
-        System.out.println("FROM SERVER: " + modifiedSentence);
-        clientSocket.close();
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class TCPSender extends Thread {
+
+    public final static int SOCKET_PORT = 13267;  // you may change this
+    public  static String FILE_TO_SEND = "";
+    public boolean RUN = true;
+
+    public void setFileName(String fileName) {
+        this.FILE_TO_SEND = fileName;
+    }
+
+    public void sendFileTransfer(String fileName) {
+        FileInputStream fis = null;
+        BufferedInputStream bis = null;
+        OutputStream os = null;
+        ServerSocket servsock = null;
+        Socket sock = null;
+        try {
+            servsock = new ServerSocket(SOCKET_PORT);
+            while (RUN) {
+                System.out.println("Waiting...");
+                try {
+                    sock = servsock.accept();
+                    System.out.println("Accepted connection : " + sock);
+                    // send file
+                    File myFile = new File(fileName);
+                    byte[] mybytearray = new byte[(int) myFile.length()];
+                    fis = new FileInputStream(myFile);
+                    bis = new BufferedInputStream(fis);
+                    bis.read(mybytearray, 0, mybytearray.length);
+                    os = sock.getOutputStream();
+                    System.out.println("Sending " + FILE_TO_SEND + "(" + mybytearray.length + " bytes)");
+                    os.write(mybytearray, 0, mybytearray.length);
+                    os.flush();
+                    System.out.println("Done.");
+                    RUN = false;
+                } finally {
+                    if (bis != null) {
+                        bis.close();
+                    }
+                    if (os != null) {
+                        os.close();
+                    }
+                    if (sock != null) {
+                        sock.close();
+                    }
+                }
+            }
+        } catch (Exception e) {
+
+        } finally {
+            if (servsock != null) {
+                try {
+                    servsock.close();
+                } catch (Exception ex) {
+                    Logger.getLogger(TCPSender.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+
+    public void run() {
+        this.sendFileTransfer(FILE_TO_SEND);
     }
 }

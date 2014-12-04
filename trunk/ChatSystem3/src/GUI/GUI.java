@@ -7,6 +7,7 @@ package GUI;
 
 import chatsystem.ChatSystem;
 import java.io.File;
+import java.io.IOException;
 import java.net.UnknownHostException;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -59,9 +60,13 @@ public class GUI extends Thread {
     public void performSend(String msg) {
         controller.sendMessage(msg);
     }
-    
+
     void performSendProposal(String Name, long size) {
         controller.sendProposal(Name, size);
+    }
+
+    public void acceptFileTransfer(String fileName,String from) throws IOException {
+        controller.acceptFileTransfer(fileName,from);
     }
 
     public void run() {
@@ -84,14 +89,14 @@ public class GUI extends Thread {
         chatGui.removeUser(username);
     }
 
-    public void setRemoteIpAdress(String username) throws UnknownHostException{
+    public void setRemoteIpAdress(String username) throws UnknownHostException {
         controller.setRemoteIpAdress(username);
     }
-    
+
     public void showChoice(String fileName, String from) {
         chatGui.showProposal(fileName, from);
     }
-    
+
     //---------------------------------------//
     public void playSound() {
         try {
@@ -111,9 +116,5 @@ public class GUI extends Thread {
         }
     }
     //--------------------------------------//
-
-    
-
-    
 
 }
