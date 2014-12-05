@@ -37,7 +37,7 @@ public class NI implements NiInterface {
     InetAddress localIpAdress;
     InetAddress broadcast;
     InetAddress remoteIpAdress;
-    
+
     String localIpAdressString;
     String broadcastString;
     private String remoteIpAdressString;
@@ -45,15 +45,15 @@ public class NI implements NiInterface {
     public NI(ChatSystem controller, int portr, int ports) {
         udpSender = new UDPSender(this, ports);
         udpServer = new UDPServer(this, portr);
-        tcpServer= new TCPServer();
-        tcpSender= new TCPSender();
+        tcpServer = new TCPServer();
+        tcpSender = new TCPSender();
         udpServer.start();
         udpSender.start();
         this.controller = controller;
         try {
             localIpAdress = InetAddress.getByName("localhost");
-            getIpOfInterfac("wlan0");
-            System.out.println(localIpAdressString+ "/"+ broadcastString);
+            getIpOfInterface("wlan0");
+            System.out.println(localIpAdressString + "/" + broadcastString);
         } catch (UnknownHostException ex) {
             Logger.getLogger(NI.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -63,15 +63,17 @@ public class NI implements NiInterface {
     public void getMessage(Object obj) throws UnknownHostException {
         if (obj instanceof TextMessage) {
             controller.showMessage((TextMessage) obj);
-            TextMessage txt=(TextMessage) obj;
-            System.out.println("\nTxt Rcvd" +txt.getMessage()+"\n");
+            TextMessage txt = (TextMessage) obj;
+            System.out.println("\nTxt Rcvd" + txt.getMessage() + "\n");
         } else if (obj instanceof Hello) {
             Hello hello;
             hello = (Hello) obj;
-            HelloOK helloOk = new HelloOK(controller.getUsername()+"@"+localIpAdressString);
-            udpSender.sendHelloOk(helloOk, getIpAdressFromUsername(hello.getUsername()), false); 
-            System.out.println("HEllo OK"+helloOk.getUsername());
-            controller.showHello((Hello) obj);
+            if (!controller.getUsername().equals(hello.getUsername())) {
+                HelloOK helloOk = new HelloOK(controller.getUsername());
+                udpSender.sendHelloOk(helloOk, getIpAdressFromUsername(hello.getUsername()), false);
+                System.out.println("HEllo OK" + helloOk.getUsername());
+                controller.showHello((Hello) obj);
+            }
         } else if (obj instanceof HelloOK) {
             controller.showHelloOK((HelloOK) obj);
         } else if (obj instanceof Goodbye) {
@@ -86,44 +88,43 @@ public class NI implements NiInterface {
 
     @Override
     public void sendHello(String userName) {
-        Hello hello = new Hello(userName+"@"+localIpAdressString);
-        System.out.println("hello : "+ userName+"@"+localIpAdressString);
+        Hello hello = new Hello(userName + "@" + localIpAdressString);
+        System.out.println("hello : " + userName + "@" + localIpAdressString);
         udpSender.sendHello(hello, broadcast, true);
     }
 
     public void sendGoodbye(String userName) {
-        Goodbye goodbye = new Goodbye(userName+"@"+localIpAdressString);
+        Goodbye goodbye = new Goodbye(userName + "@" + localIpAdressString);
         udpSender.sendGoodbye(goodbye, broadcast, true);
     }
 
     public void sendMessage(String msg) {
-        ArrayList<String> to=new ArrayList<>();
+        ArrayList<String> to = new ArrayList<>();
         to.add(remoteIpAdressString);
-        TextMessage message=new TextMessage(msg,controller.getUsername(),to);
-        udpSender.sendMsg(message, remoteIpAdress,false);
+        TextMessage message = new TextMessage(msg, controller.getUsername(), to);
+        udpSender.sendMsg(message, remoteIpAdress, false);
     }
-    
-    
+
     /*
-    Files
-    */
+     Files
+     */
     public void sendFileProposal(String Name, long size) {
-        ArrayList<String> to=new ArrayList<>();
+        ArrayList<String> to = new ArrayList<>();
         to.add(remoteIpAdressString);
-        System.out.println("fole name="+Name);
-        String[] fileName=Name.split("/");
-        
-        FileProposal fileprop=new FileProposal(fileName[fileName.length-1], size, controller.getUsername(),to);
-        udpSender.sendFilePropose(fileprop, remoteIpAdress,false);
-        tcpSender.RUN=true;
+        System.out.println("fole name=" + Name);
+        String[] fileName = Name.split("/");
+
+        FileProposal fileprop = new FileProposal(fileName[fileName.length - 1], size, controller.getUsername(), to);
+        udpSender.sendFilePropose(fileprop, remoteIpAdress, false);
+        tcpSender.RUN = true;
         tcpSender.setFileName(Name);
         tcpSender.start();
-        
+
     }
-    
-    public void acceptFileTransfer(String fileName,String from) {
+
+    public void acceptFileTransfer(String fileName, String from) {
         tcpServer.start();
-        FileProposalOK fileProposalOK=new FileProposalOK(fileName, 0, controller.getUsername(), null);
+        FileProposalOK fileProposalOK = new FileProposalOK(fileName, 0, controller.getUsername(), null);
         System.out.println(from);
         try {
             tcpServer.setSERVER(getIpAdressFromUsername(from).getHostAddress());
@@ -133,7 +134,7 @@ public class NI implements NiInterface {
         }
         tcpServer.setfileName(fileName); //A Server will be opened to send the file
         tcpServer.start();
-        
+
     }
 
     @Override
@@ -156,6 +157,7 @@ public class NI implements NiInterface {
         InetAddress adress = InetAddress.getByName(splited[1]);
         return adress;
     }
+
     public String getNameFromUsername(String username) throws UnknownHostException {
         String[] splited = username.split("@");
         return splited[0];
@@ -164,7 +166,7 @@ public class NI implements NiInterface {
     public String getLocalIpAdressString() {
         return localIpAdressString;
     }
-    
+
     public InetAddress getRemoteIpAdress() {
         return remoteIpAdress;
     }
@@ -181,32 +183,29 @@ public class NI implements NiInterface {
         this.remoteIpAdressString = remoteIpAdressString;
         setRemoteIpAdress(getIpAdressFromUsername(remoteIpAdressString));
     }
-    
-    
-    
 
-    private void getIpOfInterfac(String inter) throws UnknownHostException {
+    private void getIpOfInterface(String inter) throws UnknownHostException {
         try {
             for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
                 NetworkInterface intf = en.nextElement();
 
                 //System.out.println("    " + intf.getName() + " " + intf.getDisplayName());
                 if (intf.getName().equals(inter)) {
-                   /* for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
-                        //System.out.println("        " + enumIpAddr.nextElement().toString());
-                        InetAddress adressInterface = enumIpAddr.nextElement();
-                        if (adressInterface.getAddress().length == 4) {
-                            localIpAdress = adressInterface;
-                        }
-                    }*/
+                    /* for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                     //System.out.println("        " + enumIpAddr.nextElement().toString());
+                     InetAddress adressInterface = enumIpAddr.nextElement();
+                     if (adressInterface.getAddress().length == 4) {
+                     localIpAdress = adressInterface;
+                     }
+                     }*/
                     for (InterfaceAddress intAddress : intf.getInterfaceAddresses()) {
                         {
                             if (intAddress.getAddress().getAddress().length == 4) {
-                                localIpAdress=intAddress.getAddress();
-                                localIpAdressString=localIpAdress.getHostAddress();
-                                broadcast=intAddress.getBroadcast();
-                                broadcastString=broadcast.getHostAddress();
-                               // System.out.println(intAddress.getBroadcast());
+                                localIpAdress = intAddress.getAddress();
+                                localIpAdressString = localIpAdress.getHostAddress();
+                                broadcast = intAddress.getBroadcast();
+                                broadcastString = broadcast.getHostAddress();
+                                // System.out.println(intAddress.getBroadcast());
                             }
                         }
                     }
@@ -218,5 +217,4 @@ public class NI implements NiInterface {
 
     }
 
-    
 }
