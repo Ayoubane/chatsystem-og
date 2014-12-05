@@ -124,6 +124,12 @@ public class NI implements NiInterface {
     public void acceptFileTransfer(String fileName,String from) {
         tcpServer.start();
         FileProposalOK fileProposalOK=new FileProposalOK(fileName, 0, controller.getUsername(), null);
+        System.out.println(from);
+        try {
+            tcpServer.setSERVER(getIpAdressFromUsername(from).toString());
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(NI.class.getName()).log(Level.SEVERE, null, ex);
+        }
         tcpServer.acceptFileTransfer(fileName); //A Server will be opened to send the file
         
     }

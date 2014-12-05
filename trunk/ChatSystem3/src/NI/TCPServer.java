@@ -11,12 +11,15 @@ import java.util.logging.Logger;
 public class TCPServer extends Thread {
 
     public final static int SOCKET_PORT = 13267;      // you may change this
-    public final static String SERVER = "127.0.0.1";  // localhost
+    public String SERVER = "127.0.0.1";  // localhost
     public static String FILE_TO_RECEIVED = "/root/Desktop/";
 
     public final static int FILE_SIZE = 6022386; // file size temporary hard coded
     // should bigger than the file to be downloaded
 
+    public void setSERVER(String server){
+        this.SERVER=server;
+    }
     public void acceptFileTransfer(String fileName) {
         int bytesRead;
         int current = 0;
