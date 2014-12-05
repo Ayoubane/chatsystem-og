@@ -116,7 +116,7 @@ public class NI implements NiInterface {
         FileProposal fileprop=new FileProposal(fileName[fileName.length-1], size, controller.getUsername(),to);
         udpSender.sendFilePropose(fileprop, remoteIpAdress,false);
         tcpSender.RUN=true;
-        tcpSender.sendFileTransfer(Name);
+        tcpSender.setFileName(Name);
         tcpSender.start();
         
     }
@@ -126,11 +126,13 @@ public class NI implements NiInterface {
         FileProposalOK fileProposalOK=new FileProposalOK(fileName, 0, controller.getUsername(), null);
         System.out.println(from);
         try {
-            tcpServer.setSERVER(getIpAdressFromUsername(from).toString());
+            tcpServer.setSERVER(getIpAdressFromUsername(from).getHostAddress());
+            //System.out.println("\n\nHiiii "+from+"\n\n\n\n");
         } catch (UnknownHostException ex) {
             Logger.getLogger(NI.class.getName()).log(Level.SEVERE, null, ex);
         }
-        tcpServer.acceptFileTransfer(fileName); //A Server will be opened to send the file
+        tcpServer.setfileName(fileName); //A Server will be opened to send the file
+        tcpServer.start();
         
     }
 

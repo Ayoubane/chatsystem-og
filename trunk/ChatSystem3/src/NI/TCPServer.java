@@ -12,7 +12,7 @@ public class TCPServer extends Thread {
 
     public final static int SOCKET_PORT = 13267;      // you may change this
     public String SERVER = "127.0.0.1";  // localhost
-    public static String FILE_TO_RECEIVED = "/root/Desktop/";
+    public String FILE_TO_RECEIVED = "/root/Desktop/";
 
     public final static int FILE_SIZE = 6022386; // file size temporary hard coded
     // should bigger than the file to be downloaded
@@ -67,5 +67,13 @@ public class TCPServer extends Thread {
                 Logger.getLogger(TCPServer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+    
+    public void setfileName(String fileName){
+        this.FILE_TO_RECEIVED=fileName;
+    }
+    
+    public void run(){
+        acceptFileTransfer(FILE_TO_RECEIVED);
     }
 }
