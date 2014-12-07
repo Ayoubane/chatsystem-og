@@ -4,18 +4,15 @@ import signals.TextMessage;
 import signals.HelloOK;
 import signals.Hello;
 import signals.Goodbye;
-import chatsystem.*;
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import signals.FileProposal;
+import signals.FileTransferNOK;
+import signals.FileTransferOK;
 
 public class UDPSender extends Thread {
 
@@ -24,22 +21,22 @@ public class UDPSender extends Thread {
     NI ni;
     int ports;
 
-    public UDPSender(NI ni,int ports) {
+    public UDPSender(NI ni, int ports) {
         buffer = new ArrayList<String>(20);
-        this.ni=ni;
-        this.ports=ports;
+        this.ni = ni;
+        this.ports = ports;
     }
-    
-    public void sendHello(Hello hello,InetAddress address,boolean broadcast) {
+
+    public void sendHello(Hello hello, InetAddress address, boolean broadcast) {
 
         try {
 
-          //  String host = "localhost";
+            //  String host = "localhost";
             int port = ports;
             //BufferedReader is = new BufferedReader(new InputStreamReader(System.in));
             //String msg1 = is.readLine();
             //byte[] message = msg.getBytes();
-            
+
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(4 * 1024);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
             objectOutputStream.writeObject(hello);
@@ -47,26 +44,26 @@ public class UDPSender extends Thread {
             // Get the internet address of the specified host
             //InetAddress address = address;//InetAddress.getByName(host);
             // Initialize a datagram packet with data and address
-            DatagramPacket packet = new DatagramPacket(message,message.length, address, port);
+            DatagramPacket packet = new DatagramPacket(message, message.length, address, port);
             dsocket = new DatagramSocket();
             dsocket.setBroadcast(broadcast);
             dsocket.send(packet);
             dsocket.close();
-            
+
         } catch (Exception e) {
             System.err.println(e);
         }
     }
 
-    public void sendHelloOk(HelloOK helloOk, InetAddress address, boolean broadcast){
+    public void sendHelloOk(HelloOK helloOk, InetAddress address, boolean broadcast) {
         try {
 
-          //  String host = "localhost";
+            //  String host = "localhost";
             int port = ports;
             //BufferedReader is = new BufferedReader(new InputStreamReader(System.in));
             //String msg1 = is.readLine();
             //byte[] message = msg.getBytes();
-            
+
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(4 * 1024);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
             objectOutputStream.writeObject(helloOk);
@@ -74,26 +71,26 @@ public class UDPSender extends Thread {
             // Get the internet address of the specified host
             //InetAddress address = address;//InetAddress.getByName(host);
             // Initialize a datagram packet with data and address
-            DatagramPacket packet = new DatagramPacket(message,message.length, address, port);
+            DatagramPacket packet = new DatagramPacket(message, message.length, address, port);
             dsocket = new DatagramSocket();
             dsocket.setBroadcast(broadcast);
             dsocket.send(packet);
             dsocket.close();
-            
+
         } catch (Exception e) {
             System.err.println(e);
         }
     }
-    
-    public void sendGoodbye(Goodbye goodbye, InetAddress address, boolean broadcast){
+
+    public void sendGoodbye(Goodbye goodbye, InetAddress address, boolean broadcast) {
         try {
 
-          //  String host = "localhost";
+            //  String host = "localhost";
             int port = ports;
             //BufferedReader is = new BufferedReader(new InputStreamReader(System.in));
             //String msg1 = is.readLine();
             //byte[] message = msg.getBytes();
-            
+
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(4 * 1024);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
             objectOutputStream.writeObject(goodbye);
@@ -101,27 +98,27 @@ public class UDPSender extends Thread {
             // Get the internet address of the specified host
             //InetAddress address = address;//InetAddress.getByName(host);
             // Initialize a datagram packet with data and address
-            DatagramPacket packet = new DatagramPacket(message,message.length, address, port);
+            DatagramPacket packet = new DatagramPacket(message, message.length, address, port);
             dsocket = new DatagramSocket();
             dsocket.setBroadcast(broadcast);
             dsocket.send(packet);
             dsocket.close();
-            
+
         } catch (Exception e) {
             System.err.println(e);
         }
     }
-    
-    public void sendMsg(TextMessage msg,InetAddress address,boolean broadcast) {
+
+    public void sendMsg(TextMessage msg, InetAddress address, boolean broadcast) {
 
         try {
 
-          //  String host = "localhost";
+            //  String host = "localhost";
             int port = ports;
             //BufferedReader is = new BufferedReader(new InputStreamReader(System.in));
             //String msg1 = is.readLine();
             //byte[] message = msg.getBytes();
-            
+
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(4 * 1024);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
             objectOutputStream.writeObject(msg);
@@ -129,12 +126,12 @@ public class UDPSender extends Thread {
             // Get the internet address of the specified host
             //InetAddress address = address;//InetAddress.getByName(host);
             // Initialize a datagram packet with data and address
-            DatagramPacket packet = new DatagramPacket(message,message.length, address, port);
+            DatagramPacket packet = new DatagramPacket(message, message.length, address, port);
             dsocket = new DatagramSocket();
             dsocket.setBroadcast(broadcast);
             dsocket.send(packet);
             dsocket.close();
-            
+
         } catch (Exception e) {
             System.err.println(e);
         }
@@ -147,12 +144,12 @@ public class UDPSender extends Thread {
     void sendFilePropose(FileProposal fileprop, InetAddress address, boolean b) {
         try {
 
-          //  String host = "localhost";
+            //  String host = "localhost";
             int port = ports;
             //BufferedReader is = new BufferedReader(new InputStreamReader(System.in));
             //String msg1 = is.readLine();
             //byte[] message = msg.getBytes();
-            
+
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(4 * 1024);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
             objectOutputStream.writeObject(fileprop);
@@ -160,12 +157,66 @@ public class UDPSender extends Thread {
             // Get the internet address of the specified host
             //InetAddress address = address;//InetAddress.getByName(host);
             // Initialize a datagram packet with data and address
-            DatagramPacket packet = new DatagramPacket(message,message.length, address, port);
+            DatagramPacket packet = new DatagramPacket(message, message.length, address, port);
             dsocket = new DatagramSocket();
             dsocket.setBroadcast(b);
             dsocket.send(packet);
             dsocket.close();
-            
+
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+    }
+
+    void sendFileProposeOK(FileTransferOK filetransOK, InetAddress address, boolean b) {
+        try {
+
+            //  String host = "localhost";
+            int port = ports;
+            //BufferedReader is = new BufferedReader(new InputStreamReader(System.in));
+            //String msg1 = is.readLine();
+            //byte[] message = msg.getBytes();
+
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(4 * 1024);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+            objectOutputStream.writeObject(filetransOK);
+            byte[] message = byteArrayOutputStream.toByteArray();
+            // Get the internet address of the specified host
+            //InetAddress address = address;//InetAddress.getByName(host);
+            // Initialize a datagram packet with data and address
+            DatagramPacket packet = new DatagramPacket(message, message.length, address, port);
+            dsocket = new DatagramSocket();
+            dsocket.setBroadcast(b);
+            dsocket.send(packet);
+            dsocket.close();
+
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+    }
+
+    void sendFileProposeNOTOK(FileTransferNOK filetransNotOK, InetAddress address, boolean b) {
+        try {
+
+            //  String host = "localhost";
+            int port = ports;
+            //BufferedReader is = new BufferedReader(new InputStreamReader(System.in));
+            //String msg1 = is.readLine();
+            //byte[] message = msg.getBytes();
+
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(4 * 1024);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+            objectOutputStream.writeObject(filetransNotOK);
+            byte[] message = byteArrayOutputStream.toByteArray();
+            // Get the internet address of the specified host
+            //InetAddress address = address;//InetAddress.getByName(host);
+            // Initialize a datagram packet with data and address
+            DatagramPacket packet = new DatagramPacket(message, message.length, address, port);
+            dsocket = new DatagramSocket();
+            dsocket.setBroadcast(b);
+            dsocket.send(packet);
+            dsocket.close();
+
         } catch (Exception e) {
             System.err.println(e);
         }

@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import signals.FileProposal;
 import signals.FileProposalOK;
+import signals.FileTransferOK;
 import signals.Goodbye;
 import signals.Hello;
 import signals.HelloOK;
@@ -31,8 +32,8 @@ public class NI implements NiInterface {
 
     UDPSender udpSender;
     UDPServer udpServer;
-    TCPSender tcpSender;
-    TCPServer tcpServer;
+    TCPSend tcpSender;
+    TCPServ tcpServer;
     ChatSystem controller;
     InetAddress localIpAdress;
     InetAddress broadcast;
@@ -45,14 +46,16 @@ public class NI implements NiInterface {
     public NI(ChatSystem controller, int portr, int ports) {
         udpSender = new UDPSender(this, ports);
         udpServer = new UDPServer(this, portr);
-        tcpServer = new TCPServer();
-        tcpSender = new TCPSender();
+        tcpServer = new TCPServ();
+        tcpSender = new TCPSend();
         udpServer.start();
         udpSender.start();
         this.controller = controller;
         try {
             localIpAdress = InetAddress.getByName("localhost");
             getIpOfInterface("wlan0");
+           // broadcastString="255.255.255.255";
+            broadcast=InetAddress.getByName(broadcastString);
             System.out.println(localIpAdressString + "/" + broadcastString);
         } catch (UnknownHostException ex) {
             Logger.getLogger(NI.class.getName()).log(Level.SEVERE, null, ex);
@@ -79,8 +82,10 @@ public class NI implements NiInterface {
         } else if (obj instanceof Goodbye) {
             controller.showGoodbye((Goodbye) obj);
         } else if (obj instanceof FileProposal) {
-            controller.showFileProposal((FileProposal) obj);
-        } else {
+            controller.showFileProposal((FileProposal) obj);  
+        }else if (obj instanceof FileTransferOK) {
+           tcpSender.start();
+        }else {
             System.out.println("ERROR 404: Packet type not found!");
 
         }
@@ -116,25 +121,20 @@ public class NI implements NiInterface {
 
         FileProposal fileprop = new FileProposal(fileName[fileName.length - 1], size, controller.getUsername(), to);
         udpSender.sendFilePropose(fileprop, remoteIpAdress, false);
+        tcpSender.setReceiver(remoteIpAdressString);
         tcpSender.RUN = true;
         tcpSender.setFileName(Name);
-        tcpSender.start();
 
     }
 
     public void acceptFileTransfer(String fileName, String from) {
-        tcpServer.start();
-        FileProposalOK fileProposalOK = new FileProposalOK(fileName, 0, controller.getUsername(), null);
-        System.out.println(from);
-        try {
-            tcpServer.setSERVER(getIpAdressFromUsername(from).getHostAddress());
-            //System.out.println("\n\nHiiii "+from+"\n\n\n\n");
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(NI.class.getName()).log(Level.SEVERE, null, ex);
-        }
+       
+        System.out.println("waiting file from : "+from);
         tcpServer.setfileName(fileName); //A Server will be opened to send the file
         tcpServer.start();
-
+        
+        FileTransferOK fileProposalOK = new FileTransferOK();
+        udpSender.sendFileProposeOK(fileProposalOK, localIpAdress, true);
     }
 
     @Override
@@ -180,7 +180,7 @@ public class NI implements NiInterface {
     }
 
     public void setRemoteIpAdressString(String remoteIpAdressString) throws UnknownHostException {
-        this.remoteIpAdressString = remoteIpAdressString;
+        this.remoteIpAdressString = getIpAdressFromUsername(remoteIpAdressString).getHostAddress();
         setRemoteIpAdress(getIpAdressFromUsername(remoteIpAdressString));
     }
 
@@ -191,13 +191,6 @@ public class NI implements NiInterface {
 
                 //System.out.println("    " + intf.getName() + " " + intf.getDisplayName());
                 if (intf.getName().equals(inter)) {
-                    /* for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
-                     //System.out.println("        " + enumIpAddr.nextElement().toString());
-                     InetAddress adressInterface = enumIpAddr.nextElement();
-                     if (adressInterface.getAddress().length == 4) {
-                     localIpAdress = adressInterface;
-                     }
-                     }*/
                     for (InterfaceAddress intAddress : intf.getInterfaceAddresses()) {
                         {
                             if (intAddress.getAddress().getAddress().length == 4) {
@@ -205,7 +198,6 @@ public class NI implements NiInterface {
                                 localIpAdressString = localIpAdress.getHostAddress();
                                 broadcast = intAddress.getBroadcast();
                                 broadcastString = broadcast.getHostAddress();
-                                // System.out.println(intAddress.getBroadcast());
                             }
                         }
                     }
