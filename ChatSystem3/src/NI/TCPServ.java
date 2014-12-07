@@ -14,25 +14,35 @@ public class TCPServ extends Thread {
     public String FILE_TO_RECEIVED = "fileRcv";
     public String PATH_TO_RECEIVED = "/root/Desktop/";
     public boolean RUN = true;
-    
-    public final static int FILE_SIZE = 6022386; // file size temporary hard coded
+    ServerSocket servsock = null;
+    public final static int FILE_SIZE = 20*1024*1024; // file size temporary hard coded
     // should bigger than the file to be downloaded
 
+    public TCPServ(){
+        //this.start();
+    }
+    
+    /**
+     *
+     */
+    
+    public void stopReceiving(){
+        this.RUN=false;
+    }
     void acceptFileTransfer(String fileName) {
        
-        ServerSocket servsock = null;
-        Socket sock = null;
+        
         try {
             servsock = new ServerSocket(SOCKET_PORT);
             while (RUN) {
                 System.out.println("Waiting...");
 
+                Socket sock=null;
                 sock = servsock.accept();
                 System.out.println("Accepted connection : " + sock);
                 // receive file
                 
                 acceptFile(fileName, sock);
-                this.join();
             }
         }catch(Exception e){
             
@@ -57,7 +67,7 @@ public class TCPServ extends Thread {
         try {
             byte[] mybytearray = new byte[FILE_SIZE];
             InputStream is = sock.getInputStream();
-            fos = new FileOutputStream(PATH_TO_RECEIVED+ fileName);
+            fos = new FileOutputStream(PATH_TO_RECEIVED+ FILE_TO_RECEIVED);
             bos = new BufferedOutputStream(fos);
             bytesRead = is.read(mybytearray, 0, mybytearray.length);
             current = bytesRead;

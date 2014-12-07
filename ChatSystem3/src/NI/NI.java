@@ -6,7 +6,6 @@
 package NI;
 
 import chatsystem.ChatSystem;
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
@@ -17,7 +16,7 @@ import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import signals.FileProposal;
-import signals.FileProposalOK;
+import signals.FileTransferAccepted;
 import signals.FileTransferOK;
 import signals.Goodbye;
 import signals.Hello;
@@ -48,14 +47,14 @@ public class NI implements NiInterface {
         udpServer = new UDPServer(this, portr);
         tcpServer = new TCPServ();
         tcpSender = new TCPSend();
-        udpServer.start();
-        udpSender.start();
+
+        //--------TCPServer & TCPSender Init
         this.controller = controller;
         try {
             localIpAdress = InetAddress.getByName("localhost");
             getIpOfInterface("wlan0");
-           // broadcastString="255.255.255.255";
-            broadcast=InetAddress.getByName(broadcastString);
+            // broadcastString="255.255.255.255";
+            broadcast = InetAddress.getByName(broadcastString);
             System.out.println(localIpAdressString + "/" + broadcastString);
         } catch (UnknownHostException ex) {
             Logger.getLogger(NI.class.getName()).log(Level.SEVERE, null, ex);
@@ -82,10 +81,13 @@ public class NI implements NiInterface {
         } else if (obj instanceof Goodbye) {
             controller.showGoodbye((Goodbye) obj);
         } else if (obj instanceof FileProposal) {
-            controller.showFileProposal((FileProposal) obj);  
-        }else if (obj instanceof FileTransferOK) {
-           tcpSender.start();
-        }else {
+            controller.showFileProposal((FileProposal) obj);
+        } else if (obj instanceof FileTransferAccepted) {
+            
+           Thread tcpsnd= new Thread(tcpSender);
+           tcpsnd.start();
+            
+        } else {
             System.out.println("ERROR 404: Packet type not found!");
 
         }
@@ -93,6 +95,11 @@ public class NI implements NiInterface {
 
     @Override
     public void sendHello(String userName) {
+        if (!udpSender.isAlive() && !udpServer.isAlive()) {
+            udpServer.start();
+            udpSender.start();
+        }
+
         Hello hello = new Hello(userName + "@" + localIpAdressString);
         System.out.println("hello : " + userName + "@" + localIpAdressString);
         udpSender.sendHello(hello, broadcast, true);
@@ -116,25 +123,30 @@ public class NI implements NiInterface {
     public void sendFileProposal(String Name, long size) {
         ArrayList<String> to = new ArrayList<>();
         to.add(remoteIpAdressString);
-        System.out.println("fole name=" + Name);
+        System.out.println("file name=" + Name);
         String[] fileName = Name.split("/");
 
         FileProposal fileprop = new FileProposal(fileName[fileName.length - 1], size, controller.getUsername(), to);
         udpSender.sendFilePropose(fileprop, remoteIpAdress, false);
         tcpSender.setReceiver(remoteIpAdressString);
-        tcpSender.RUN = true;
         tcpSender.setFileName(Name);
 
     }
 
     public void acceptFileTransfer(String fileName, String from) {
-       
-        System.out.println("waiting file from : "+from);
-        tcpServer.setfileName(fileName); //A Server will be opened to send the file
-        tcpServer.start();
-        
-        FileTransferOK fileProposalOK = new FileTransferOK();
-        udpSender.sendFileProposeOK(fileProposalOK, localIpAdress, true);
+        System.out.println("waiting file"+ fileName+" ,  from : " + from);
+
+        tcpServer.setfileName(fileName);
+        //tcpServer.RUN = true;
+        if (tcpServer.isAlive()) {
+            //tcpServer.run();
+        } else {
+            tcpServer.start();
+        }
+        FileTransferAccepted fileProposalAccepted = new FileTransferAccepted(fileName, fileName);
+        udpSender.sendFileProposeOK(fileProposalAccepted, getIpAdressFromUsername(from), true);
+
+
     }
 
     @Override
@@ -152,10 +164,16 @@ public class NI implements NiInterface {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public InetAddress getIpAdressFromUsername(String username) throws UnknownHostException {
+    public InetAddress getIpAdressFromUsername(String username) {
         String[] splited = username.split("@");
-        InetAddress adress = InetAddress.getByName(splited[1]);
-        return adress;
+        InetAddress adress;
+        try {
+            adress = InetAddress.getByName(splited[1]);
+            return adress;
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(NI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     public String getNameFromUsername(String username) throws UnknownHostException {

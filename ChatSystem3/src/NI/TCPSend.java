@@ -10,11 +10,10 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class TCPSend extends Thread {
+public class TCPSend implements Runnable{
 
     public final static int SOCKET_PORT = 13267;  // you may change this
     public static String FILE_TO_SEND = "";
-    public boolean RUN = true;
     public String RECEIVER = "127.0.0.1";  // localhost
 
     public void setReceiver(String rcvr) {
@@ -42,17 +41,19 @@ public class TCPSend extends Thread {
                 if (servsock != null) {
                     servsock.close();
                 }
-                this.join();
+                
             } catch (Exception ex) {
                 Logger.getLogger(TCPSender.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
+        
     }
 
     public void run() {
-        System.out.println("Sender Run, send to "+RECEIVER + " ... "+FILE_TO_SEND );
-        this.sendFileTransfer(FILE_TO_SEND);
+        System.out.println("Sender Run, send to " + RECEIVER + " ... " + FILE_TO_SEND);
+        if (FILE_TO_SEND.length() != 0) {
+            this.sendFileTransfer(FILE_TO_SEND);
+        }
     }
 
     public void sendFile(String fileName, Socket sock) {
@@ -70,7 +71,6 @@ public class TCPSend extends Thread {
             os.write(mybytearray, 0, mybytearray.length);
             os.flush();
             System.out.println("Done.");
-            RUN = false;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -89,7 +89,6 @@ public class TCPSend extends Thread {
                 Logger.getLogger(TCPSender.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
     }
 
 }

@@ -11,6 +11,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import signals.FileProposal;
+import signals.FileTransferAccepted;
 import signals.FileTransferNOK;
 import signals.FileTransferOK;
 
@@ -168,7 +169,7 @@ public class UDPSender extends Thread {
         }
     }
 
-    void sendFileProposeOK(FileTransferOK filetransOK, InetAddress address, boolean b) {
+    void sendFileProposeOK(FileTransferAccepted filetransOK, InetAddress address, boolean b) {
         try {
 
             //  String host = "localhost";
