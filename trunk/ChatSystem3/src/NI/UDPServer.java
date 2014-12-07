@@ -10,7 +10,7 @@ import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import signals.FileProposal;
-import signals.FileTransferOK;
+import signals.FileTransferAccepted;
 
 public class UDPServer extends Thread {
 
@@ -23,7 +23,7 @@ public class UDPServer extends Thread {
     private Goodbye goodbye=null;
     private TextMessage msgRecu=null;
     private FileProposal fileProp=null;
-    private FileTransferOK fileTransferOK=null;
+    private FileTransferAccepted fileTransferOK=null;
 
 
     public UDPServer(NI ni, int portr) {
@@ -64,8 +64,8 @@ public class UDPServer extends Thread {
                 fileProp = (FileProposal) resultat;
                 iStream.close();
             }
-            else if(resultat instanceof FileTransferOK){
-                fileTransferOK = (FileTransferOK) resultat;
+            else if(resultat instanceof FileTransferAccepted){
+                fileTransferOK = (FileTransferAccepted) resultat;
                 iStream.close();
             }
         }
@@ -119,14 +119,15 @@ public class UDPServer extends Thread {
                     ni.getMessage(fileProp);
                     System.out.println(fileProp);
                     System.out.println("Recived a FileProp");
+                    
                 }
                  else if(ni.controller.CONNECTED == true && pack.getLength() > 0 && hello==null && helloOk==null && goodbye==null && msgRecu==null && fileProp==null && fileTransferOK!=null){
                     ni.getMessage(fileTransferOK);
                     System.out.println(fileTransferOK);
-                    System.out.println("Recived a FileTransOK");
+                    System.out.println("Recived a FileTransferAccepted");
                 }
                 else{
-                    System.out.println(hello+" // "+helloOk +" // "+goodbye+" // "+msgRecu+" // "+fileProp);
+                    System.out.println(hello+" // "+helloOk +" // "+goodbye+" // "+msgRecu+" // "+fileProp+"//"+fileTransferOK);
                     System.out.println("ERROR!");
                 }
 
@@ -139,6 +140,7 @@ public class UDPServer extends Thread {
 
     @Override
     public void run() {
+        System.out.println("receiveing\n\n");
         this.receive();
     }
 }
