@@ -13,6 +13,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.JOptionPane;
+import javax.swing.text.BadLocationException;
 
 /**
  *
@@ -22,12 +23,18 @@ public class GUI extends Thread {
 
     ChatSystem controller;
     private ChatGUI chatGui;
+    private ConnectWindow connect;
     private String msg;
     private String username;
 
     public GUI(ChatSystem controller) {
         this.controller = controller;
     }
+
+    public void setConnect(ConnectWindow connect) {
+        this.connect = connect;
+    }
+    
 
     public String getUser() {
         return this.username;
@@ -37,14 +44,14 @@ public class GUI extends Thread {
         return msg;
     }
 
-    public void setMsg(String username, String msg) {
+    public void setMsg(String username, String msg) throws BadLocationException {
         //this.msg = msg;
         if (chatGui != null) {
-            chatGui.getjTextArea1().append(username + ": ");
-            chatGui.getjTextArea1().append(msg);
-            chatGui.getjTextArea1().append("\n");
+            chatGui.appendjTextPane1(username + ": ",1);
+            chatGui.appendjTextPane1(msg,0);
+            chatGui.appendjTextPane1("\n",0);
         }
-       // playSound();
+       playSound();
     }
 
     public void performConnect(String userName) {
@@ -54,7 +61,8 @@ public class GUI extends Thread {
 
     public void performDisconnect(String userName) {
         controller.sndGoodbye(userName);
-
+        chatGui.dispose();
+        connect.setVisible(true);
     }
 
     public void performSend(String msg) {
@@ -106,7 +114,7 @@ public class GUI extends Thread {
             clip.start();
         } catch (Exception e) {
             try {
-                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("fb1.wav"));
+                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("fb.wav"));
                 Clip clip = AudioSystem.getClip();
                 clip.open(audioInputStream);
                 clip.start();

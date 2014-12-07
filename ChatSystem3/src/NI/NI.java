@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.text.BadLocationException;
 import signals.FileProposal;
 import signals.FileTransferAccepted;
 import signals.FileTransferOK;
@@ -41,6 +42,7 @@ public class NI implements NiInterface {
     String localIpAdressString;
     String broadcastString;
     private String remoteIpAdressString;
+    boolean serverRunning=true;
 
     public NI(ChatSystem controller, int portr, int ports) {
         udpSender = new UDPSender(this, ports);
@@ -52,17 +54,19 @@ public class NI implements NiInterface {
         this.controller = controller;
         try {
             localIpAdress = InetAddress.getByName("localhost");
-            getIpOfInterface("wlan0");
+
+            getIpOfInterface("eth8");
             // broadcastString="255.255.255.255";
             broadcast = InetAddress.getByName(broadcastString);
             System.out.println(localIpAdressString + "/" + broadcastString);
+
         } catch (UnknownHostException ex) {
             Logger.getLogger(NI.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
 
-    public void getMessage(Object obj) throws UnknownHostException {
+    public void getMessage(Object obj) throws UnknownHostException, BadLocationException {
         if (obj instanceof TextMessage) {
             controller.showMessage((TextMessage) obj);
             TextMessage txt = (TextMessage) obj;
@@ -108,6 +112,7 @@ public class NI implements NiInterface {
     public void sendGoodbye(String userName) {
         Goodbye goodbye = new Goodbye(userName + "@" + localIpAdressString);
         udpSender.sendGoodbye(goodbye, broadcast, true);
+        this.serverRunning=false;
     }
 
     public void sendMessage(String msg) {
@@ -134,6 +139,7 @@ public class NI implements NiInterface {
     }
 
     public void acceptFileTransfer(String fileName, String from) {
+
         System.out.println("waiting file"+ fileName+" ,  from : " + from);
 
         tcpServer.setfileName(fileName);
@@ -145,8 +151,6 @@ public class NI implements NiInterface {
         }
         FileTransferAccepted fileProposalAccepted = new FileTransferAccepted(fileName, fileName);
         udpSender.sendFileProposeOK(fileProposalAccepted, getIpAdressFromUsername(from), true);
-
-
     }
 
     @Override

@@ -9,6 +9,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.text.BadLocationException;
 import signals.FileProposal;
 import signals.FileTransferAccepted;
 
@@ -78,13 +82,13 @@ public class UDPServer extends Thread {
    
     
     
-    public void receive() {
+    public void receive() throws UnknownHostException, BadLocationException {
 
         try {
 
             DatagramSocket sock = new DatagramSocket(portr);
             // echo back everything
-            while (true) {
+            while (ni.serverRunning) {
                 DatagramPacket pack = new DatagramPacket(new byte[BUFFERSIZE], BUFFERSIZE);
                 sock.receive(pack);
                 //sock.send(pack);
@@ -141,6 +145,12 @@ public class UDPServer extends Thread {
     @Override
     public void run() {
         System.out.println("receiveing\n\n");
-        this.receive();
+        try {
+            this.receive();
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(UDPServer.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (BadLocationException ex) {
+            Logger.getLogger(UDPServer.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

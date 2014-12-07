@@ -5,6 +5,7 @@
  */
 package GUI;
 
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
@@ -12,31 +13,42 @@ import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultCaret;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 /**
  *
  * @author Ayoub
  */
-public class ChatGUI extends javax.swing.JFrame {
 
-    
-    
+public class ChatGUI extends javax.swing.JFrame {
 
     /**
      * Creates new form ChatGUI
      */
+    
     GUI gui;
     DefaultListModel model = new DefaultListModel();
 
     public ChatGUI(final GUI gui) {
         this.gui = gui;
         initComponents();
+        //JTextArea automatically updates to scroll down ;)
+        DefaultCaret caret = (DefaultCaret)jTextPane1.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         
         listSelectionListener = new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent listSelectionEvent) {
@@ -51,15 +63,31 @@ public class ChatGUI extends javax.swing.JFrame {
             }
         };
        jList1.addListSelectionListener(listSelectionListener);
+       
+       
     }
 
+    public void changeLanguageFR(){
+        jButton1.setText("Envoyer");
+        jButton2.setText("Choisir fichier");
+        jButton3.setText("Créations de groupes");
+        jButton4.setText("Se déconnecter");
+    }
+    
     public void editJlabel1(String s) {
         jLabel1.setText(s);
     }
     
+    
     public void showProposal(String fileName, String from) {
         //n prend la valeur 0 si on accepte, 1 si on n'accepte pas
-        int n= JOptionPane.showConfirmDialog(this,"Would you like to get this file : "+fileName+" From"+from+" ?","File Proposal",JOptionPane.YES_NO_OPTION);
+        int n=0; //MAYBE PROBLEM!!!
+        if(this.gui.controller.Language=="English"){
+            n= JOptionPane.showConfirmDialog(this,"Would you like to get this file : "+fileName+" From"+from+" ?","File Proposal",JOptionPane.YES_NO_OPTION);
+        }else if(this.gui.controller.Language=="Francais"){
+            n= JOptionPane.showConfirmDialog(this,"Voudrez vous telecharger le fichier : "+fileName+" envoyé par "+from+" ?","Proposition De Telechargement",JOptionPane.YES_NO_OPTION);
+        }
+        
         //System.out.println("n = "+n);
         if(n==0){
             try {
@@ -73,9 +101,32 @@ public class ChatGUI extends javax.swing.JFrame {
         
     }
 
-    /*public void editText1(String msg){
-     jTextArea1.setText(msg);
-     }*/
+    public void appendjTextPane1(String str, int color) throws BadLocationException
+    {
+        if(color==1){
+           //SENDER USERNAME
+           StyledDocument document = (StyledDocument) jTextPane1.getDocument();
+           Style style = jTextPane1.addStyle("I'm a Style", null);
+           StyleConstants.setForeground(style, Color.ORANGE);
+           style.addAttribute(StyleConstants.CharacterConstants.Bold, Boolean.TRUE);
+           document.insertString(document.getLength(), str, style);    
+        }
+        else if(color==0){
+           //MESSAGES
+           StyledDocument document = (StyledDocument) jTextPane1.getDocument();
+           Style style = jTextPane1.addStyle("I'm a Style", null);
+           StyleConstants.setForeground(style, Color.black);
+           document.insertString(document.getLength(), str, style); 
+        }
+        else if(color==2){
+            //RECEIVER USERNAME
+           StyledDocument document = (StyledDocument) jTextPane1.getDocument();
+           Style style = jTextPane1.addStyle("I'm a Style", null);
+           StyleConstants.setForeground(style, Color.black);
+           style.addAttribute(StyleConstants.CharacterConstants.Bold, Boolean.TRUE);
+           document.insertString(document.getLength(), str, style); 
+        }
+     }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -86,8 +137,6 @@ public class ChatGUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
         jButton1 = new javax.swing.JButton();
@@ -98,6 +147,8 @@ public class ChatGUI extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jTextPane1 = new javax.swing.JTextPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("OA ChatSystem v2.0");
@@ -108,13 +159,11 @@ public class ChatGUI extends javax.swing.JFrame {
         jPanel1.setToolTipText("");
         jPanel1.setName(""); // NOI18N
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
-
         jList1.setModel(model);
         jScrollPane2.setViewportView(jList1);
 
+        jButton1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(0, 153, 153));
         jButton1.setText("Send");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -122,6 +171,8 @@ public class ChatGUI extends javax.swing.JFrame {
             }
         });
 
+        jButton2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(0, 153, 153));
         jButton2.setText("Select File");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -129,6 +180,8 @@ public class ChatGUI extends javax.swing.JFrame {
             }
         });
 
+        jButton3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jButton3.setForeground(new java.awt.Color(0, 153, 153));
         jButton3.setText("Create Group");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -144,6 +197,8 @@ public class ChatGUI extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(jTextArea2);
 
+        jButton4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jButton4.setForeground(new java.awt.Color(0, 153, 153));
         jButton4.setText("Disconnect");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -151,12 +206,15 @@ public class ChatGUI extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 153, 153));
         jLabel1.setText("Username");
 
         jLabel2.setForeground(new java.awt.Color(254, 18, 18));
         jLabel2.setText("Remote IP");
         jLabel2.setBorder(new javax.swing.border.MatteBorder(null));
+
+        jScrollPane4.setViewportView(jTextPane1);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -180,10 +238,10 @@ public class ChatGUI extends javax.swing.JFrame {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 459, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jScrollPane4))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -196,8 +254,8 @@ public class ChatGUI extends javax.swing.JFrame {
                         .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
+                    .addComponent(jScrollPane4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -226,14 +284,24 @@ public class ChatGUI extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        pack();
+        setSize(new java.awt.Dimension(661, 458));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        jTextArea1.append(gui.getUser() + ": "); // Or me ;)
-        jTextArea1.append(jTextArea2.getText());
-        jTextArea1.append("\n");
+        try {
+            if(this.gui.controller.Language=="English"){
+                appendjTextPane1("Me : ",2);// Or gui.getUser() ;)
+            }else if(this.gui.controller.Language=="Francais"){
+                appendjTextPane1("Moi : ",2);// Or gui.getUser() ;)
+            }
+            appendjTextPane1(jTextArea2.getText(),0);
+            appendjTextPane1("\n",0);
+        } catch (BadLocationException ex) {
+            Logger.getLogger(ChatGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         gui.performSend(jTextArea2.getText());
         jTextArea2.setText(null);
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -258,19 +326,42 @@ public class ChatGUI extends javax.swing.JFrame {
 
     private void jTextArea2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea2KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            jTextArea1.append("Me :  ");
-            jTextArea1.append(jTextArea2.getText());
-            jTextArea1.append("\n");
+            try {
+                if(this.gui.controller.Language=="English"){
+                    appendjTextPane1("Me : ",2);// Or gui.getUser() ;)
+                }else if(this.gui.controller.Language=="Francais"){
+                    appendjTextPane1("Moi : ",2);// Or gui.getUser() ;)
+                }
+                appendjTextPane1(jTextArea2.getText(),0);
+                appendjTextPane1("\n",0);
+            } catch (BadLocationException ex) {
+                Logger.getLogger(ChatGUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
             gui.performSend(jTextArea2.getText());
             jTextArea2.setText(null);
         }
     }//GEN-LAST:event_jTextArea2KeyPressed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        jTextArea1.append("Me :  ");
-        jTextArea1.append(jTextArea2.getText());
-        jTextArea1.append("\n");
+        try {
+            if(this.gui.controller.Language=="English"){
+                appendjTextPane1("Me : ",2);// Or gui.getUser() ;)
+            }else if(this.gui.controller.Language=="Francais"){
+                appendjTextPane1("Moi : ",2);// Or gui.getUser() ;)
+            }
+            appendjTextPane1("GoodBye, I'm "+gui.getUser(),0);
+            appendjTextPane1("\n",0);
+        } catch (BadLocationException ex) {
+            Logger.getLogger(ChatGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         gui.performDisconnect(gui.getUser());
+        if(this.gui.controller.Language=="English"){
+                JOptionPane.showMessageDialog(this, "You have been successfully disconnected.");
+        }else if(this.gui.controller.Language=="Francais"){
+            JOptionPane.showMessageDialog(this, "vous avez bien été déconnecté.");
+        }
+        
     }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
@@ -317,21 +408,22 @@ public class ChatGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTextArea jTextArea2;
+    private javax.swing.JTextPane jTextPane1;
     // End of variables declaration//GEN-END:variables
   ListSelectionListener listSelectionListener;
 
-    public JTextArea getjTextArea1() {
-        return jTextArea1;
+    public JTextPane getjTextPane1() {
+        return jTextPane1;
     }
 
-    public void setjTextArea1(JTextArea jTextArea1) {
-        this.jTextArea1 = jTextArea1;
+    public void setjTextPane1(JTextPane jTextPane1) {
+        this.jTextPane1 = jTextPane1;
     }
+  
 
     public JTextArea getjTextArea2() {
         return jTextArea2;
@@ -348,9 +440,9 @@ public class ChatGUI extends javax.swing.JFrame {
     }
 
     public void removeUser(String username) {
-        if (!model.contains(username)) {
+        if (model.contains(username)) {
             model.removeElement(username);
         }
     }
-
+ 
 }

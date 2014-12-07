@@ -25,6 +25,12 @@ public class GroupeChoice extends java.awt.Dialog {
         super(parent, modal);
         this.cgui=(ChatGUI)parent;
         initComponents();
+        if(cgui.gui.controller.Language=="Francais"){
+            jLabel2.setText("Création de groupe");
+            jLabel1.setText("Veuillez indiquer le nombre de groupes à créer:");
+            jButton1.setText("Ok");
+            jButton2.setText("Annuler");
+        }
     }
 
     /**
@@ -49,6 +55,7 @@ public class GroupeChoice extends java.awt.Dialog {
         });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 153, 153));
         jLabel1.setText("Enter the number of groups you want to create : ");
 
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
@@ -57,9 +64,12 @@ public class GroupeChoice extends java.awt.Dialog {
             }
         });
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(0, 153, 153));
         jLabel2.setText("Creation of A Group");
 
+        jButton1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(0, 153, 153));
         jButton1.setText("Ok");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -67,7 +77,14 @@ public class GroupeChoice extends java.awt.Dialog {
             }
         });
 
+        jButton2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(0, 153, 153));
         jButton2.setText("Cancel");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -104,7 +121,8 @@ public class GroupeChoice extends java.awt.Dialog {
                 .addContainerGap())
         );
 
-        pack();
+        setSize(new java.awt.Dimension(569, 251));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     /**
@@ -133,6 +151,10 @@ public class GroupeChoice extends java.awt.Dialog {
         group.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -158,4 +180,6 @@ public class GroupeChoice extends java.awt.Dialog {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
+
+
 }

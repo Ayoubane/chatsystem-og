@@ -11,17 +11,19 @@ import java.util.logging.Logger;
 public class TCPServer extends Thread {
 
     public final static int SOCKET_PORT = 13267;      // you may change this
+
     public String SERVER = "127.0.0.1";  // localhost
+
     public String FILE_TO_RECEIVED = "fileRcv";
-    public String PATH_TO_RECEIVED = "/root/Desktop/";
+    public String PATH_TO_RECEIVED = "D:\\";
 
     public final static int FILE_SIZE = 6022386; // file size temporary hard coded
-    // should bigger than the file to be downloaded
+    // should be bigger than the file to be downloaded
 
     public void setSERVER(String server) {
         this.SERVER = server;
     }
-
+    
     public void acceptFileTransfer(String fileName) {
         Socket sock = null;
         try {
