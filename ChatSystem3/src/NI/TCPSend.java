@@ -10,44 +10,48 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class TCPSender extends Thread {
+public class TCPSend extends Thread {
 
     public final static int SOCKET_PORT = 13267;  // you may change this
     public static String FILE_TO_SEND = "";
     public boolean RUN = true;
+    public String RECEIVER = "127.0.0.1";  // localhost
+
+    public void setReceiver(String rcvr) {
+        this.RECEIVER = rcvr;
+    }
 
     public void setFileName(String fileName) {
         this.FILE_TO_SEND = fileName;
     }
 
     public void sendFileTransfer(String fileName) {
-
         ServerSocket servsock = null;
         Socket sock = null;
+        System.out.println("asdsasdasda");
         try {
-            servsock = new ServerSocket(SOCKET_PORT);
-            while (RUN) {
-                System.out.println("Waiting...");
+            sock = new Socket(RECEIVER, SOCKET_PORT);
+            System.out.println("Connecting...");
+            // send file
+            sendFile(fileName, sock);
 
-                sock = servsock.accept();
-                System.out.println("Accepted connection : " + sock);
-                // send file
-                sendFile(fileName, sock);
-            }
         } catch (Exception e) {
 
         } finally {
-            if (servsock != null) {
-                try {
+            try {
+                if (servsock != null) {
                     servsock.close();
-                } catch (Exception ex) {
-                    Logger.getLogger(TCPSender.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                this.join();
+            } catch (Exception ex) {
+                Logger.getLogger(TCPSender.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+
     }
 
     public void run() {
+        System.out.println("Sender Run, send to "+RECEIVER + " ... "+FILE_TO_SEND );
         this.sendFileTransfer(FILE_TO_SEND);
     }
 
@@ -87,4 +91,5 @@ public class TCPSender extends Thread {
         }
 
     }
+
 }
