@@ -156,7 +156,7 @@ public class NI implements NiInterface {
         } else {
             tcpServer.start();
         }
-        FileTransferAccepted fileProposalAccepted = new FileTransferAccepted(fileName, fileName);
+        FileTransferAccepted fileProposalAccepted = new FileTransferAccepted(fileName, controller.getUsername());
         udpSender.sendFileProposeOK(fileProposalAccepted, getIpAdressFromUsername(from), true);
     }
 
