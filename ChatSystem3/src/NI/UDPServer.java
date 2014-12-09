@@ -16,7 +16,7 @@ import javax.swing.text.BadLocationException;
 import signals.FileProposal;
 import signals.FileTransferAccepted;
 
-public class UDPServer extends Thread {
+public class UDPServer implements Runnable{
 
     
     static final int BUFFERSIZE = 4 * 1024;//256;

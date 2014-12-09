@@ -31,7 +31,6 @@ public class UDPSender extends Thread {
     public void sendHello(Hello hello, InetAddress address, boolean broadcast) {
 
         try {
-
             //  String host = "localhost";
             int port = ports;
             //BufferedReader is = new BufferedReader(new InputStreamReader(System.in));

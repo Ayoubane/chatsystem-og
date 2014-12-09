@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 public class TCPSend implements Runnable{
 
-    public final static int SOCKET_PORT = 13267;  // you may change this
+    public final static int SOCKET_PORT = 4444;  // you may change this
     public static String FILE_TO_SEND = "";
     public String RECEIVER = "127.0.0.1";  // localhost
 
