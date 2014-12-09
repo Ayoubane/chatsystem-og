@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 public class TCPServ extends Thread {
 
-    public final static int SOCKET_PORT = 13267;      // you may change this
+    public final static int SOCKET_PORT = 4444;      // you may change this
     public String FILE_TO_RECEIVED = "fileRcv";
     public String PATH_TO_RECEIVED = "/root/Desktop/";
     public boolean RUN = true;

@@ -34,7 +34,10 @@ import javax.swing.text.StyledDocument;
  * @author Ayoub
  */
 
+
+
 public class ChatGUI extends javax.swing.JFrame {
+
 
     /**
      * Creates new form ChatGUI
@@ -50,19 +53,20 @@ public class ChatGUI extends javax.swing.JFrame {
         DefaultCaret caret = (DefaultCaret)jTextPane1.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         
+
         listSelectionListener = new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent listSelectionEvent) {
                 try {
                     gui.setRemoteIpAdress(jList1.getSelectedValue().toString());
-                    String username=jList1.getSelectedValue().toString();
-                    String[] ipadress=username.split("@");
+                    String username = jList1.getSelectedValue().toString();
+                    String[] ipadress = username.split("@");
                     jLabel2.setText(ipadress[1]);
                 } catch (UnknownHostException ex) {
                     Logger.getLogger(ChatGUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         };
-       jList1.addListSelectionListener(listSelectionListener);
+        jList1.addListSelectionListener(listSelectionListener);
        
        
     }
@@ -77,10 +81,11 @@ public class ChatGUI extends javax.swing.JFrame {
     public void editJlabel1(String s) {
         jLabel1.setText(s);
     }
-    
+
     
     public void showProposal(String fileName, String from) {
-        //n prend la valeur 0 si on accepte, 1 si on n'accepte pas
+        
+
         int n=0; //MAYBE PROBLEM!!!
         if(this.gui.controller.Language=="English"){
             n= JOptionPane.showConfirmDialog(this,"Would you like to get this file : "+fileName+" From"+from+" ?","File Proposal",JOptionPane.YES_NO_OPTION);
@@ -88,17 +93,18 @@ public class ChatGUI extends javax.swing.JFrame {
             n= JOptionPane.showConfirmDialog(this,"Voudrez vous telecharger le fichier : "+fileName+" envoyé par "+from+" ?","Proposition De Telechargement",JOptionPane.YES_NO_OPTION);
         }
         
+
         //System.out.println("n = "+n);
-        if(n==0){
+        if (n == 0) {
             try {
-                gui.acceptFileTransfer(fileName,from);
+                gui.acceptFileTransfer(fileName, from);
             } catch (IOException ex) {
                 Logger.getLogger(ChatGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }else{
+        } else {
             //we canceled the transfer
         }
-        
+
     }
 
     public void appendjTextPane1(String str, int color) throws BadLocationException
@@ -307,20 +313,21 @@ public class ChatGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        JFileChooser fc = new JFileChooser();
+        final JFileChooser fc = new JFileChooser();
         int returnVal = fc.showOpenDialog(this); //Where frame is the parent component
 
-        File file = null;
         if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = null;
             file = fc.getSelectedFile();
             gui.performSendProposal(file.getAbsolutePath(), file.getTotalSpace());
+
         } else {
             //User did not choose a valid file
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        GroupeChoice choice=new GroupeChoice(this, rootPaneCheckingEnabled);
+        GroupeChoice choice = new GroupeChoice(this, rootPaneCheckingEnabled);
         choice.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -367,37 +374,6 @@ public class ChatGUI extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ChatGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ChatGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ChatGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ChatGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                //new ChatGUI().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

@@ -42,21 +42,28 @@ public class NI implements NiInterface {
     String localIpAdressString;
     String broadcastString;
     private String remoteIpAdressString;
+
+    Thread udpSendThread;
+    Thread udpRcvThread;
+
     boolean serverRunning=true;
+
 
     public NI(ChatSystem controller, int portr, int ports) {
         udpSender = new UDPSender(this, ports);
         udpServer = new UDPServer(this, portr);
         tcpServer = new TCPServ();
         tcpSender = new TCPSend();
-
+        udpSendThread=new Thread(udpSender);
+        udpRcvThread=new Thread(udpServer);
+        
         //--------TCPServer & TCPSender Init
         this.controller = controller;
         try {
             localIpAdress = InetAddress.getByName("localhost");
 
-            getIpOfInterface("eth8");
-            // broadcastString="255.255.255.255";
+            getIpOfInterface("wlan0");
+           // broadcastString="255.255.255.255";
             broadcast = InetAddress.getByName(broadcastString);
             System.out.println(localIpAdressString + "/" + broadcastString);
 
@@ -99,9 +106,9 @@ public class NI implements NiInterface {
 
     @Override
     public void sendHello(String userName) {
-        if (!udpSender.isAlive() && !udpServer.isAlive()) {
-            udpServer.start();
-            udpSender.start();
+        if (!udpSendThread.isAlive() && !udpRcvThread.isAlive()) {
+            udpRcvThread.start();
+            udpSendThread.start();
         }
 
         Hello hello = new Hello(userName + "@" + localIpAdressString);
