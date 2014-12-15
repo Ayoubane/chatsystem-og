@@ -8,11 +8,10 @@ package GUI;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 /**
- *
- * @author Ayoub
+ * The GroupeGUI Window
+ * @author Ayoub, Omar
  */
 public class GroupeGUI extends javax.swing.JFrame {
 
@@ -111,6 +110,11 @@ public class GroupeGUI extends javax.swing.JFrame {
         });
     }
     
+    /**
+     * Method called to add a new JTab
+     * @param title
+     * @param pane 
+     */
     public void addToJTab(String title, JComponent pane){
         jTabbedPane1.addTab(title, pane);
     }

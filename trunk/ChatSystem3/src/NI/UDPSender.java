@@ -1,20 +1,17 @@
 package NI;
 
-import signals.TextMessage;
-import signals.HelloOK;
-import signals.Hello;
-import signals.Goodbye;
+import signals.*;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
-import signals.FileProposal;
-import signals.FileTransferAccepted;
-import signals.FileTransferNOK;
-import signals.FileTransferOK;
 
+/**
+ * The UDP Sender
+ * @author Ayoub , Omar
+ */
 public class UDPSender extends Thread {
 
     private ArrayList<String> buffer;
@@ -22,12 +19,23 @@ public class UDPSender extends Thread {
     NI ni;
     int ports;
 
+    /**
+     * Creates a new UDPSender for the NI
+     * @param ni
+     * @param ports 
+     */
     public UDPSender(NI ni, int ports) {
         buffer = new ArrayList<String>(20);
         this.ni = ni;
         this.ports = ports;
     }
 
+    /**
+     * Sends a Hello to the Remote UDPServer
+     * @param hello
+     * @param address
+     * @param broadcast 
+     */
     public void sendHello(Hello hello, InetAddress address, boolean broadcast) {
 
         try {
@@ -55,6 +63,12 @@ public class UDPSender extends Thread {
         }
     }
 
+    /**
+     * Sends a HelloOk to the Remote UDPServer
+     * @param helloOk 
+     * @param address
+     * @param broadcast 
+     */
     public void sendHelloOk(HelloOK helloOk, InetAddress address, boolean broadcast) {
         try {
 
@@ -82,6 +96,12 @@ public class UDPSender extends Thread {
         }
     }
 
+    /**
+     * Sends a GoodBye to the Remote UDPServer
+     * @param goodbye 
+     * @param address
+     * @param broadcast 
+     */
     public void sendGoodbye(Goodbye goodbye, InetAddress address, boolean broadcast) {
         try {
 
@@ -109,6 +129,12 @@ public class UDPSender extends Thread {
         }
     }
 
+    /**
+     * Sends a Message to the Remote UDPServer
+     * @param msg 
+     * @param address
+     * @param broadcast 
+     */
     public void sendMsg(TextMessage msg, InetAddress address, boolean broadcast) {
 
         try {
@@ -137,10 +163,20 @@ public class UDPSender extends Thread {
         }
     }
 
+    /**
+     * Adds a message to the buffer
+     * @param msg 
+     */
     public void addToBuffer(String msg) {
         buffer.add(msg);
     }
 
+    /**
+     * Sends a file Proposal to the remote UDPServer
+     * @param fileprop
+     * @param address
+     * @param b 
+     */
     void sendFilePropose(FileProposal fileprop, InetAddress address, boolean b) {
         try {
 
@@ -168,6 +204,12 @@ public class UDPSender extends Thread {
         }
     }
 
+    /**
+     * Sends a FileProposalOk to the remote UDPServer
+     * @param filetransOK
+     * @param address
+     * @param b 
+     */
     void sendFileProposeOK(FileTransferAccepted filetransOK, InetAddress address, boolean b) {
         try {
 
@@ -195,6 +237,12 @@ public class UDPSender extends Thread {
         }
     }
 
+    /**
+     * Sends a FileProposalNOTOk to the remote UDPServer
+     * @param filetransNotOK
+     * @param address
+     * @param b 
+     */
     void sendFileProposeNOTOK(FileTransferNOK filetransNotOK, InetAddress address, boolean b) {
         try {
 

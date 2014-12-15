@@ -8,6 +8,10 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * The TCP Server
+ * @author Ayoub, Omar
+ */
 public class TCPServ extends Thread {
 
     public final static int SOCKET_PORT = 4444;      // you may change this
@@ -23,12 +27,16 @@ public class TCPServ extends Thread {
     }
     
     /**
-     *
+     * Stops the receiving of a file
      */
-    
     public void stopReceiving(){
         this.RUN=false;
     }
+    
+    /**
+     * Opens a socket to receive the file
+     * @param fileName 
+     */
     void acceptFileTransfer(String fileName) {
        
         
@@ -50,6 +58,10 @@ public class TCPServ extends Thread {
         
     }
     
+    /**
+     * Sets the file to receive name
+     * @param fileName 
+     */
     public void setfileName(String fileName){
         this.FILE_TO_RECEIVED=fileName;
     }
@@ -58,7 +70,11 @@ public class TCPServ extends Thread {
         acceptFileTransfer(FILE_TO_RECEIVED);
     }
     
-    
+    /**
+     * Receives the file and downloads it to the right folder
+     * @param fileName
+     * @param sock 
+     */
     public void acceptFile(String fileName,Socket sock) {
         int bytesRead;
         int current = 0;

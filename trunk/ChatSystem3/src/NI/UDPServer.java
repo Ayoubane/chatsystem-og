@@ -16,6 +16,10 @@ import javax.swing.text.BadLocationException;
 import signals.FileProposal;
 import signals.FileTransferAccepted;
 
+/**
+ * The UDP Server
+ * @author Ayoub, Omar
+ */
 public class UDPServer implements Runnable{
 
     
@@ -29,13 +33,20 @@ public class UDPServer implements Runnable{
     private FileProposal fileProp=null;
     private FileTransferAccepted fileTransferOK=null;
 
-
+    /**
+     * Creates a new UDPServer for the NI
+     * @param ni
+     * @param portr 
+     */
     public UDPServer(NI ni, int portr) {
         this.ni = ni;
         this.portr=portr;
     }
     
-
+    /**
+     * Deserializes a packet to determine it's type
+     * @param data 
+     */
     public void deserializePacket(byte[] data)
     {
         try
@@ -73,15 +84,17 @@ public class UDPServer implements Runnable{
                 iStream.close();
             }
         }
-        catch(Exception e)
+        catch(IOException | ClassNotFoundException e)
         {
             e.printStackTrace();
         }
     }
 
-   
-    
-    
+    /**
+     * Waits for a message to deserialize it and forwards it to the right method
+     * @throws UnknownHostException
+     * @throws BadLocationException 
+     */
     public void receive() throws UnknownHostException, BadLocationException {
 
         try {

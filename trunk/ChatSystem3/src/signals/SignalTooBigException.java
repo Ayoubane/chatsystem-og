@@ -5,11 +5,11 @@
  */
 package signals;
 
-import NI.*;
+
 
 /**
- *
- * @author gb
+ * An exception raised when the signal received is too big
+ * @author Ayoub, Omar
  */
 public class SignalTooBigException extends Exception {
 
