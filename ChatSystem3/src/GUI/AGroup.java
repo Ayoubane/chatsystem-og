@@ -23,8 +23,8 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 /**
- *
- * @author Ayoub
+ * The Group window
+ * @author Ayoub, Omar
  */
 public class AGroup extends javax.swing.JPanel {
 
@@ -36,6 +36,7 @@ public class AGroup extends javax.swing.JPanel {
 
     /**
      * Creates new form AGroup
+     * @param cgui 
      */
     public AGroup(ChatGUI cgui) {
         this.cgui=cgui;
@@ -71,6 +72,12 @@ public class AGroup extends javax.swing.JPanel {
        
     }
 
+    /**
+     * Method used to put colored text in the JTextPane1
+     * @param str
+     * @param color
+     * @throws BadLocationException 
+     */
     public void appendjTextPane1(String str, int color) throws BadLocationException
     {
         if(color==1){
@@ -200,6 +207,10 @@ public class AGroup extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Method called when File Selection button is pressed
+     * @param evt 
+     */
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         JFileChooser fc = new JFileChooser();
         int returnVal = fc.showOpenDialog(this); //Where frame is the parent component
@@ -227,6 +238,10 @@ public class AGroup extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    /**
+     * Method called when Send button is pressed
+     * @param evt 
+     */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
             if(this.cgui.gui.controller.Language=="English"){
@@ -257,6 +272,10 @@ public class AGroup extends javax.swing.JPanel {
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    /**
+     * Method called when RETURN key is pressed
+     * @param evt 
+     */
     private void jTextArea3KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea3KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             try {

@@ -24,28 +24,27 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
-import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 /**
- *
- * @author Ayoub
+ * The Chat GUI Class
+ * @author Ayoub, Omar
  */
 
 
 
 public class ChatGUI extends javax.swing.JFrame {
 
-
-    /**
-     * Creates new form ChatGUI
-     */
-    
+  
     GUI gui;
     DefaultListModel model = new DefaultListModel();
 
+    /**
+     * Creates a new ChatGUI form
+     * @param gui 
+     */
     public ChatGUI(final GUI gui) {
         this.gui = gui;
         initComponents();
@@ -71,6 +70,9 @@ public class ChatGUI extends javax.swing.JFrame {
        
     }
 
+    /**
+     * Changes language to French
+     */
     public void changeLanguageFR(){
         jButton1.setText("Envoyer");
         jButton2.setText("Choisir fichier");
@@ -78,11 +80,19 @@ public class ChatGUI extends javax.swing.JFrame {
         jButton4.setText("Se déconnecter");
     }
     
+    /**
+     * Edits the private component JLabel1
+     * @param s The text to put in the JLabel1
+     */
     public void editJlabel1(String s) {
         jLabel1.setText(s);
     }
 
-    
+    /**
+     * Shows the file proposal sent from an another user
+     * @param fileName The file name
+     * @param from Sender Username
+     */
     public void showProposal(String fileName, String from) {
         
 
@@ -107,6 +117,12 @@ public class ChatGUI extends javax.swing.JFrame {
 
     }
 
+    /**
+     * Puts colored text in the JTextPane1
+     * @param str String to put in JTextPane
+     * @param color Color chosen for the text
+     * @throws BadLocationException 
+     */
     public void appendjTextPane1(String str, int color) throws BadLocationException
     {
         if(color==1){
@@ -295,6 +311,10 @@ public class ChatGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
 
+    /**
+     * Method called when Send Button is pressed
+     * @param evt 
+     */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
             if(this.gui.controller.Language=="English"){
@@ -312,6 +332,10 @@ public class ChatGUI extends javax.swing.JFrame {
         jTextArea2.setText(null);
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    /**
+     * Method called when Select File method is pressed
+     * @param evt 
+     */
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         final JFileChooser fc = new JFileChooser();
         int returnVal = fc.showOpenDialog(this); //Where frame is the parent component
@@ -326,11 +350,19 @@ public class ChatGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    /**
+     * Method called when Create a group is pressed
+     * @param evt 
+     */
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         GroupeChoice choice = new GroupeChoice(this, rootPaneCheckingEnabled);
         choice.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    /**
+     * Method called when RETURN key is pressed
+     * @param evt 
+     */
     private void jTextArea2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea2KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             try {
@@ -349,6 +381,10 @@ public class ChatGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jTextArea2KeyPressed
 
+    /**
+     * Method called when Disconnect button is pressed
+     * @param evt 
+     */
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         try {
             if(this.gui.controller.Language=="English"){
@@ -371,9 +407,7 @@ public class ChatGUI extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jButton4ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

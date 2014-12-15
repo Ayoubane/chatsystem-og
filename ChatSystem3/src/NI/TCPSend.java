@@ -10,20 +10,36 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * The TCP Sender
+ * @author Ayoub, Omar
+ */
 public class TCPSend implements Runnable{
 
     public final static int SOCKET_PORT = 4444;  // you may change this
     public static String FILE_TO_SEND = "";
     public String RECEIVER = "127.0.0.1";  // localhost
 
+    /**
+     * Sets the receiver's IP Address
+     * @param rcvr 
+     */
     public void setReceiver(String rcvr) {
         this.RECEIVER = rcvr;
     }
 
+    /**
+     * Sets the file to send name
+     * @param fileName 
+     */
     public void setFileName(String fileName) {
         this.FILE_TO_SEND = fileName;
     }
 
+    /**
+     * Opens a new Socket to send the file to the remote TCP Server
+     * @param fileName 
+     */
     public void sendFileTransfer(String fileName) {
         ServerSocket servsock = null;
         Socket sock = null;
@@ -56,6 +72,11 @@ public class TCPSend implements Runnable{
         }
     }
 
+    /**
+     * Sends the file to the remote TCP Server
+     * @param fileName
+     * @param sock 
+     */
     public void sendFile(String fileName, Socket sock) {
         FileInputStream fis = null;
         BufferedInputStream bis = null;

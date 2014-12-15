@@ -2,12 +2,23 @@ package signals;
 
 import java.util.ArrayList;
 
+/**
+ * The File Proposal Signal
+ * @author Ayoub, Omar
+ */
 public class FileProposal extends Signal {
 	private String fileName;
 	private long size;
 	private String from;
 	private ArrayList<String> to;
 	
+        /**
+         * Creates a File Proposal Signal
+         * @param fileName
+         * @param size
+         * @param from
+         * @param to 
+         */
 	public FileProposal(String fileName, long size, String from, ArrayList<String> to) {
 		super();
 		this.fileName = fileName;

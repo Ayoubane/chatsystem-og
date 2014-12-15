@@ -16,17 +16,11 @@ import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
-import signals.FileProposal;
-import signals.FileTransferAccepted;
-import signals.FileTransferOK;
-import signals.Goodbye;
-import signals.Hello;
-import signals.HelloOK;
-import signals.TextMessage;
+import signals.*;
 
 /**
- *
- * @author root
+ * The Chat NI
+ * @author Ayoub, Omar
  */
 public class NI implements NiInterface {
 
@@ -48,7 +42,12 @@ public class NI implements NiInterface {
 
     boolean serverRunning=true;
 
-
+    /**
+     * Creates a new Chat NI
+     * @param controller
+     * @param portr
+     * @param ports 
+     */
     public NI(ChatSystem controller, int portr, int ports) {
         udpSender = new UDPSender(this, ports);
         udpServer = new UDPServer(this, portr);
@@ -73,6 +72,12 @@ public class NI implements NiInterface {
 
     }
 
+    /**
+     * Receives a message from the UDP Server and does the right action
+     * @param obj
+     * @throws UnknownHostException
+     * @throws BadLocationException 
+     */
     public void getMessage(Object obj) throws UnknownHostException, BadLocationException {
         if (obj instanceof TextMessage) {
             controller.showMessage((TextMessage) obj);
@@ -104,6 +109,10 @@ public class NI implements NiInterface {
         }
     }
 
+    /**
+     * Sends a hello over the UDP Sender
+     * @param userName 
+     */
     @Override
     public void sendHello(String userName) {
         if (!udpSendThread.isAlive() && !udpRcvThread.isAlive()) {
@@ -116,12 +125,22 @@ public class NI implements NiInterface {
         udpSender.sendHello(hello, broadcast, true);
     }
 
+    /**
+     * Sends a Goodbye over the UDP Sender
+     * @param userName 
+     */
+    @Override
     public void sendGoodbye(String userName) {
         Goodbye goodbye = new Goodbye(userName + "@" + localIpAdressString);
         udpSender.sendGoodbye(goodbye, broadcast, true);
         this.serverRunning=false;
     }
-
+    
+    /**
+     * Sends a message over the UDP Sender
+     * @param msg 
+     */
+    @Override
     public void sendMessage(String msg) {
         ArrayList<String> to = new ArrayList<>();
         to.add(remoteIpAdressString);
@@ -132,6 +151,13 @@ public class NI implements NiInterface {
     /*
      Files
      */
+    
+    /**
+     * Sends a FileProposal over the UDP Sender
+     * @param Name
+     * @param size 
+     */
+    @Override
     public void sendFileProposal(String Name, long size) {
         ArrayList<String> to = new ArrayList<>();
         to.add(remoteIpAdressString);
@@ -145,6 +171,12 @@ public class NI implements NiInterface {
 
     }
 
+    /**
+     * Sends the Accept File Transfer and starts the TCP Server to receive it
+     * @param fileName
+     * @param from 
+     */
+    @Override
     public void acceptFileTransfer(String fileName, String from) {
 
         System.out.println("waiting file"+ fileName+" ,  from : " + from);
@@ -160,21 +192,11 @@ public class NI implements NiInterface {
         udpSender.sendFileProposeOK(fileProposalAccepted, getIpAdressFromUsername(from), true);
     }
 
-    @Override
-    public void closeConnection() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void sendMsg(String msg, String from, String[] to) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void sendFile(String path, String from, String[] to) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
+    /**
+     * Splits the username to get the IP Address from it
+     * @param username
+     * @return 
+     */
     public InetAddress getIpAdressFromUsername(String username) {
         String[] splited = username.split("@");
         InetAddress adress;
@@ -187,32 +209,64 @@ public class NI implements NiInterface {
         return null;
     }
 
+    /**
+     * Splits the username to get only the username from it
+     * @param username
+     * @return
+     * @throws UnknownHostException 
+     */
     public String getNameFromUsername(String username) throws UnknownHostException {
         String[] splited = username.split("@");
         return splited[0];
     }
 
+    /**
+     * A Getter for the localIpAdressString field
+     * @return 
+     */
     public String getLocalIpAdressString() {
         return localIpAdressString;
     }
 
+    /**
+     * A Getter for the remoteIpAdress field
+     * @return 
+     */
     public InetAddress getRemoteIpAdress() {
         return remoteIpAdress;
     }
 
+    /**
+     * A Setter for the remoteIpAdress field
+     * @param remoteIpAdress 
+     */
     public void setRemoteIpAdress(InetAddress remoteIpAdress) {
         this.remoteIpAdress = remoteIpAdress;
     }
 
+    /**
+     * A Getter for the remoteIpAdressString field
+     * @return 
+     */
     public String getRemoteIpAdressString() {
         return remoteIpAdressString;
     }
 
+    /**
+     * A Setter for the remoteIpAdressString field
+     * @param remoteIpAdressString
+     * @throws UnknownHostException 
+     */
     public void setRemoteIpAdressString(String remoteIpAdressString) throws UnknownHostException {
         this.remoteIpAdressString = getIpAdressFromUsername(remoteIpAdressString).getHostAddress();
         setRemoteIpAdress(getIpAdressFromUsername(remoteIpAdressString));
     }
 
+    /**
+     * Gets the IP Address from the interface connected to Internet
+     * @param inter
+     * @throws UnknownHostException 
+     */
     private void getIpOfInterface(String inter) throws UnknownHostException {
         try {
             for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {

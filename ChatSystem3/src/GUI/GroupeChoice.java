@@ -6,12 +6,11 @@
 
 package GUI;
 
-import java.awt.GridLayout;
 import javax.swing.*;
 
 /**
- *
- * @author Ayoub
+ * The Groupe Choice Window
+ * @author Ayoub, Omar
  */
 public class GroupeChoice extends java.awt.Dialog {
 
@@ -137,6 +136,10 @@ public class GroupeChoice extends java.awt.Dialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
+    /**
+     * Creates the chosen number of chat groups
+     * @param evt 
+     */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         GroupeGUI group=new GroupeGUI();
         System.out.println("Creation of "+Integer.parseInt(jTextField1.getText())+" Groups!");
@@ -151,6 +154,10 @@ public class GroupeChoice extends java.awt.Dialog {
         group.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    /**
+     * Method called when Cancel button is pressed
+     * @param evt 
+     */
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed

@@ -13,13 +13,20 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
- *
- * @author gb
+ * The Signal Class serializes packets
+ * @author Ayoub, Omar
  */
 public abstract class Signal implements Serializable {
     
     public final static int MAX_SIZE = 1024;
     
+    /**
+     * Method to Serialize packets to send
+     * @param signal
+     * @return
+     * @throws SignalTooBigException
+     * @throws IOException 
+     */
     public static byte[] toByteArray(Signal signal) throws SignalTooBigException, IOException {
 
         byte[] result = new byte[MAX_SIZE];

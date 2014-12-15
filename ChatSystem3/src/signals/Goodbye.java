@@ -1,10 +1,16 @@
 package signals;
 
-import java.io.Serializable;
-
+/**
+ * The GoodBye Packet
+ * @author Ayoub, Omar
+ */
 public class Goodbye extends Signal {
 	private String username;
 
+        /**
+         * Creates a GoodBye packet
+         * @param username 
+         */
 	public Goodbye(String username) {
 		super();
 		this.username = username;

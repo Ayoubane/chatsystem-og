@@ -6,8 +6,8 @@
 package GUI;
 
 /**
- *
- * @author root
+ * GUI Interface
+ * @author Ayoub, Omar
  */
 public interface GUIInterface {
     

@@ -9,15 +9,16 @@ import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 
 /**
- *
- * @author Ayoub
+ * The ConnectWindow Class
+ * @author Ayoub, Omar
  */
 public class ConnectWindow extends javax.swing.JFrame {
 
     GUI gui;
 
     /**
-     * Creates new form ConnectWindow
+     * Creates a new Connect Window
+     * @param gui 
      */
     public ConnectWindow(final GUI gui) {
         this.gui = gui;
@@ -145,6 +146,10 @@ public class ConnectWindow extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Method called when the Connect Button is pressed
+     * @param evt 
+     */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         ChatGUI cgui = new ChatGUI(gui);
         gui.setChatGui(cgui);
@@ -164,6 +169,10 @@ public class ConnectWindow extends javax.swing.JFrame {
        // System.out.println(jTextArea1.getText());
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    /**
+     * Method called when the RETURN key is pressed
+     * @param evt 
+     */
     private void jTextArea1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             ChatGUI cgui = new ChatGUI(gui);
@@ -183,6 +192,10 @@ public class ConnectWindow extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jTextArea1KeyPressed
 
+    /**
+     * Method called when the Exit button is pressed
+     * @param evt 
+     */
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         JOptionPane.showMessageDialog(this, "Thank you for your visit, see you soon ! ;) ");
         System.exit(0);

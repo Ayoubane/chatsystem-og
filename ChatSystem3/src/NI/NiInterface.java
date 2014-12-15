@@ -5,15 +5,20 @@
  */
 package NI;
 
+import java.net.UnknownHostException;
+import javax.swing.text.BadLocationException;
+
 /**
- *
- * @author root
+ * The NI Interface
+ * @author Ayoub, Omar
  */
 public interface NiInterface {
     
+    public void getMessage(Object obj) throws UnknownHostException, BadLocationException;
     public void sendHello(String userName);
-    public void closeConnection();
-    public void sendMsg(String msg, String from,String[] to);
-    public void sendFile(String path, String from,String[] to);
+    public void sendGoodbye(String userName);
+    public void sendMessage(String msg);
+    public void sendFileProposal(String Name, long size);
+    public void acceptFileTransfer(String fileName, String from);
     
 }

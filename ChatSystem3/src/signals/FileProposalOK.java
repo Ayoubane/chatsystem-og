@@ -6,8 +6,8 @@
 package signals;
 
 /**
- *
- * @author root
+ * The FileProposalOk Signal
+ * @author Ayoub & Omar
  */
 import java.util.ArrayList;
 
@@ -17,6 +17,13 @@ public class FileProposalOK extends Signal {
 	private String from;
 	private ArrayList<String> to;
 	
+        /**
+         * Creates a FileProposalOk Signal
+         * @param fileName
+         * @param size
+         * @param from
+         * @param to 
+         */
 	public FileProposalOK(String fileName, long size, String from, ArrayList<String> to) {
 		super();
 		this.fileName = fileName;
