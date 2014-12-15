@@ -26,8 +26,8 @@ public class NI implements NiInterface {
 
     UDPSender udpSender;
     UDPServer udpServer;
-    TCPSend tcpSender;
-    TCPServ tcpServer;
+    TCPSender tcpSender;
+    TCPServer tcpServer;
     ChatSystem controller;
     InetAddress localIpAdress;
     InetAddress broadcast;
@@ -51,8 +51,8 @@ public class NI implements NiInterface {
     public NI(ChatSystem controller, int portr, int ports) {
         udpSender = new UDPSender(this, ports);
         udpServer = new UDPServer(this, portr);
-        tcpServer = new TCPServ();
-        tcpSender = new TCPSend();
+        tcpServer = new TCPServer();
+        tcpSender = new TCPSender();
         udpSendThread=new Thread(udpSender);
         udpRcvThread=new Thread(udpServer);
         
@@ -62,8 +62,7 @@ public class NI implements NiInterface {
             localIpAdress = InetAddress.getByName("localhost");
 
             getIpOfInterface("wlan0");
-           // broadcastString="255.255.255.255";
-            broadcast = InetAddress.getByName(broadcastString);
+            // broadcastString="255.255.255.255";  We can use 255.255.255.255 as a broadcast as a general case
             System.out.println(localIpAdressString + "/" + broadcastString);
 
         } catch (UnknownHostException ex) {
@@ -212,10 +211,9 @@ public class NI implements NiInterface {
     /**
      * Splits the username to get only the username from it
      * @param username
-     * @return
-     * @throws UnknownHostException 
+     * @return 
      */
-    public String getNameFromUsername(String username) throws UnknownHostException {
+    public String getNameFromUsername(String username) {
         String[] splited = username.split("@");
         return splited[0];
     }
@@ -253,11 +251,11 @@ public class NI implements NiInterface {
     }
 
     /**
-     * A Setter for the remoteIpAdressString field
+     * A Setter for the remoteIpAdressString field that set remoteIpAdress too
      * @param remoteIpAdressString
-     * @throws UnknownHostException 
+     
      */
-    public void setRemoteIpAdressString(String remoteIpAdressString) throws UnknownHostException {
+    public void setRemoteIpAdressString(String remoteIpAdressString)  {
         this.remoteIpAdressString = getIpAdressFromUsername(remoteIpAdressString).getHostAddress();
         setRemoteIpAdress(getIpAdressFromUsername(remoteIpAdressString));
     }

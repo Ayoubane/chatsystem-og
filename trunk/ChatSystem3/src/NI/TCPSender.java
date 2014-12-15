@@ -14,14 +14,22 @@ import java.util.logging.Logger;
  * The TCP Sender
  * @author Ayoub, Omar
  */
-public class TCPSender extends Thread {
+public class TCPSender implements Runnable{
 
-    public final static int SOCKET_PORT = 13267;  // you may change this
+    public final static int SOCKET_PORT = 4444;  // you may change this
     public static String FILE_TO_SEND = "";
-    public boolean RUN = true;
+    public String RECEIVER = "127.0.0.1";  // localhost
 
     /**
-     * Sets teh file to send name
+     * Sets the receiver's IP Address
+     * @param rcvr 
+     */
+    public void setReceiver(String rcvr) {
+        this.RECEIVER = rcvr;
+    }
+
+    /**
+     * Sets the file to send name
      * @param fileName 
      */
     public void setFileName(String fileName) {
@@ -29,42 +37,43 @@ public class TCPSender extends Thread {
     }
 
     /**
-     * Opens the socket to send the file to the remote TCP Server
+     * Opens a new Socket to send the file to the remote TCP Server
      * @param fileName 
      */
     public void sendFileTransfer(String fileName) {
-
         ServerSocket servsock = null;
         Socket sock = null;
+        System.out.println("asdsasdasda");
         try {
-            servsock = new ServerSocket(SOCKET_PORT);
-            while (RUN) {
-                System.out.println("Waiting...");
+            sock = new Socket(RECEIVER, SOCKET_PORT);
+            System.out.println("Connecting...");
+            // send file
+            sendFile(fileName, sock);
 
-                sock = servsock.accept();
-                System.out.println("Accepted connection : " + sock);
-                // send file
-                sendFile(fileName, sock);
-            }
         } catch (Exception e) {
 
         } finally {
-            if (servsock != null) {
-                try {
+            try {
+                if (servsock != null) {
                     servsock.close();
-                } catch (Exception ex) {
-                    Logger.getLogger(TCPSender.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                
+            } catch (Exception ex) {
+                Logger.getLogger(TCPSender.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
     }
 
     public void run() {
-        this.sendFileTransfer(FILE_TO_SEND);
+        System.out.println("Sender Run, send to " + RECEIVER + " ... " + FILE_TO_SEND);
+        if (FILE_TO_SEND.length() != 0) {
+            this.sendFileTransfer(FILE_TO_SEND);
+        }
     }
 
     /**
-     * Sends the file to the remote TCP Server
+     * Sends the file to the remote TCP Server Once the connection is established
      * @param fileName
      * @param sock 
      */
@@ -83,7 +92,6 @@ public class TCPSender extends Thread {
             os.write(mybytearray, 0, mybytearray.length);
             os.flush();
             System.out.println("Done.");
-            RUN = false;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -102,6 +110,6 @@ public class TCPSender extends Thread {
                 Logger.getLogger(TCPSender.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
     }
+
 }
