@@ -6,18 +6,13 @@
 package signals;
 
 /**
- * The FileTransferNotAccepted Signal
- * @author Ayoub, Omar
+ *
+ * @author gb
  */
 public class FileTransferNotAccepted extends Signal {
     private String fileName;
     private String remoteUsername;
 
-    /**
-     * Creates a FileTransferNotAccepted Signal
-     * @param fileName
-     * @param remoteUsername 
-     */
     public FileTransferNotAccepted(String fileName, String remoteUsername) {
         this.fileName = fileName;
         this.remoteUsername = remoteUsername;
