@@ -192,7 +192,7 @@ public class UDPSender extends Thread {
      * @param address
      * @param b 
      */
-    void sendFileProposeNOTOK(FileTransferNOK filetransNotOK, InetAddress address, boolean b) {
+    void sendFileProposeNOTOK(FileTransferNotAccepted filetransNotOK, InetAddress address, boolean b) {
         try {
             int port = ports;
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(4 * 1024);
