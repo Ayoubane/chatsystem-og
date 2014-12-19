@@ -112,7 +112,7 @@ public class ChatGUI extends javax.swing.JFrame {
                 Logger.getLogger(ChatGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            //we canceled the transfer
+           gui.notAcceptFileTransfer(fileName, from);
         }
 
     }

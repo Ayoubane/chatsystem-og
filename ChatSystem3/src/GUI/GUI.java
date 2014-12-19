@@ -9,6 +9,8 @@ import chatsystem.ChatSystem;
 import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -64,7 +66,7 @@ public class GUI extends Thread {
      * @param msg
      * @throws BadLocationException 
      */
-    public void setMsg(String username, String msg) throws BadLocationException {
+    public void dispalyMsg(String username, String msg) throws BadLocationException {
         //this.msg = msg;
         if (chatGui != null) {
             chatGui.appendjTextPane1(username + ": ",1);
@@ -88,7 +90,7 @@ public class GUI extends Thread {
      * @param userName 
      */
     public void performDisconnect(String userName) {
-        controller.sndGoodbye(userName);
+        controller.sendGoodbye(userName);
         chatGui.dispose();
         connect.setVisible(true);
     }
@@ -194,6 +196,11 @@ public class GUI extends Thread {
                 e1.printStackTrace();
             }
         }
+    }
+
+    void notAcceptFileTransfer(String fileName, String from) {
+            controller.notAcceptFileTransfer(fileName,from);
+        
     }
 
 }
