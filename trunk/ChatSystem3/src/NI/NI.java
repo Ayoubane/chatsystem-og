@@ -20,6 +20,7 @@ import signals.*;
 
 /**
  * The Chat NI
+ *
  * @author Ayoub, Omar
  */
 public class NI implements NiInterface {
@@ -40,29 +41,31 @@ public class NI implements NiInterface {
     Thread udpSendThread;
     Thread udpRcvThread;
 
-    boolean serverRunning=true;
+    boolean serverRunning = true;
 
     /**
      * Creates a new Chat NI
+     *
      * @param controller
      * @param portr
-     * @param ports 
+     * @param ports
      */
     public NI(ChatSystem controller, int portr, int ports) {
         udpSender = new UDPSender(this, ports);
         udpServer = new UDPServer(this, portr);
         tcpServer = new TCPServer();
         tcpSender = new TCPSender();
-        udpSendThread=new Thread(udpSender);
-        udpRcvThread=new Thread(udpServer);
-        
+        udpSendThread = new Thread(udpSender);
+        udpRcvThread = new Thread(udpServer);
+
         //--------TCPServer & TCPSender Init
         this.controller = controller;
         try {
-            localIpAdress = InetAddress.getByName("localhost");
-
-            getIpOfInterface("wlan0");
-            // broadcastString="255.255.255.255";  We can use 255.255.255.255 as a broadcast as a general case
+            //Get IP Address and set Broadcast Address
+            localIpAdress = InetAddress.getLocalHost();
+            localIpAdressString = localIpAdress.getHostAddress();
+            broadcastString = "255.255.255.255"; //We can use 255.255.255.255 as a broadcast as a general case
+            broadcast = InetAddress.getByName(broadcastString);
             System.out.println(localIpAdressString + "/" + broadcastString);
 
         } catch (UnknownHostException ex) {
@@ -73,9 +76,10 @@ public class NI implements NiInterface {
 
     /**
      * Receives a message from the UDP Server and does the right action
+     *
      * @param obj
      * @throws UnknownHostException
-     * @throws BadLocationException 
+     * @throws BadLocationException
      */
     public void getMessage(Object obj) throws UnknownHostException, BadLocationException {
         if (obj instanceof TextMessage) {
@@ -98,10 +102,14 @@ public class NI implements NiInterface {
         } else if (obj instanceof FileProposal) {
             controller.showFileProposal((FileProposal) obj);
         } else if (obj instanceof FileTransferAccepted) {
-            
-           Thread tcpsnd= new Thread(tcpSender);
-           tcpsnd.start();
-            
+            Thread tcpsnd = new Thread(tcpSender);
+            tcpsnd.start();
+            FileTransferAccepted accepted = (FileTransferAccepted) obj;
+            ArrayList<String> to = new ArrayList<String>();
+            to.add(accepted.getRemoteUsername());
+            TextMessage txt = new TextMessage("File Transfered : " + accepted.getFileName(), controller.getUsername(), to);
+            controller.showMessage(txt);
+
         } else {
             System.out.println("ERROR 404: Packet type not found!");
 
@@ -110,7 +118,8 @@ public class NI implements NiInterface {
 
     /**
      * Sends a hello over the UDP Sender
-     * @param userName 
+     *
+     * @param userName
      */
     @Override
     public void sendHello(String userName) {
@@ -126,18 +135,20 @@ public class NI implements NiInterface {
 
     /**
      * Sends a Goodbye over the UDP Sender
-     * @param userName 
+     *
+     * @param userName
      */
     @Override
     public void sendGoodbye(String userName) {
         Goodbye goodbye = new Goodbye(userName + "@" + localIpAdressString);
         udpSender.sendGoodbye(goodbye, broadcast, true);
-        this.serverRunning=false;
+        this.serverRunning = false;
     }
-    
+
     /**
      * Sends a message over the UDP Sender
-     * @param msg 
+     *
+     * @param msg
      */
     @Override
     public void sendMessage(String msg) {
@@ -150,11 +161,11 @@ public class NI implements NiInterface {
     /*
      Files
      */
-    
     /**
      * Sends a FileProposal over the UDP Sender
+     *
      * @param Name
-     * @param size 
+     * @param size
      */
     @Override
     public void sendFileProposal(String Name, long size) {
@@ -172,13 +183,14 @@ public class NI implements NiInterface {
 
     /**
      * Sends the Accept File Transfer and starts the TCP Server to receive it
+     *
      * @param fileName
-     * @param from 
+     * @param from
      */
     @Override
     public void acceptFileTransfer(String fileName, String from) {
 
-        System.out.println("waiting file"+ fileName+" ,  from : " + from);
+        System.out.println("waiting file" + fileName + " ,  from : " + from);
 
         tcpServer.setfileName(fileName);
         //tcpServer.RUN = true;
@@ -193,8 +205,9 @@ public class NI implements NiInterface {
 
     /**
      * Splits the username to get the IP Address from it
+     *
      * @param username
-     * @return 
+     * @return
      */
     public InetAddress getIpAdressFromUsername(String username) {
         String[] splited = username.split("@");
@@ -210,8 +223,9 @@ public class NI implements NiInterface {
 
     /**
      * Splits the username to get only the username from it
+     *
      * @param username
-     * @return 
+     * @return
      */
     public String getNameFromUsername(String username) {
         String[] splited = username.split("@");
@@ -220,7 +234,8 @@ public class NI implements NiInterface {
 
     /**
      * A Getter for the localIpAdressString field
-     * @return 
+     *
+     * @return
      */
     public String getLocalIpAdressString() {
         return localIpAdressString;
@@ -228,7 +243,8 @@ public class NI implements NiInterface {
 
     /**
      * A Getter for the remoteIpAdress field
-     * @return 
+     *
+     * @return
      */
     public InetAddress getRemoteIpAdress() {
         return remoteIpAdress;
@@ -236,7 +252,8 @@ public class NI implements NiInterface {
 
     /**
      * A Setter for the remoteIpAdress field
-     * @param remoteIpAdress 
+     *
+     * @param remoteIpAdress
      */
     public void setRemoteIpAdress(InetAddress remoteIpAdress) {
         this.remoteIpAdress = remoteIpAdress;
@@ -244,7 +261,8 @@ public class NI implements NiInterface {
 
     /**
      * A Getter for the remoteIpAdressString field
-     * @return 
+     *
+     * @return
      */
     public String getRemoteIpAdressString() {
         return remoteIpAdressString;
@@ -252,18 +270,20 @@ public class NI implements NiInterface {
 
     /**
      * A Setter for the remoteIpAdressString field that set remoteIpAdress too
+     *
      * @param remoteIpAdressString
-     
+     *
      */
-    public void setRemoteIpAdressString(String remoteIpAdressString)  {
+    public void setRemoteIpAdressString(String remoteIpAdressString) {
         this.remoteIpAdressString = getIpAdressFromUsername(remoteIpAdressString).getHostAddress();
         setRemoteIpAdress(getIpAdressFromUsername(remoteIpAdressString));
     }
 
     /**
      * Gets the IP Address from the interface connected to Internet
+     *
      * @param inter
-     * @throws UnknownHostException 
+     * @throws UnknownHostException
      */
     private void getIpOfInterface(String inter) throws UnknownHostException {
         try {
@@ -288,6 +308,11 @@ public class NI implements NiInterface {
             System.out.println(" (error retrieving network interface list)");
         }
 
+    }
+
+    public void notAcceptFileTransfer(String fileName, String from) {
+        FileTransferNotAccepted fileProposalNOtAccepted = new FileTransferNotAccepted(fileName, controller.getUsername());
+        udpSender.sendFileProposeNOTOK(fileProposalNOtAccepted, getIpAdressFromUsername(from), true);
     }
 
 }

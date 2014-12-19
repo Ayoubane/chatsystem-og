@@ -9,7 +9,6 @@ import signals.*;
 import GUI.GUI;
 import NI.NI;
 import java.io.IOException;
-import java.util.*;
 import java.net.UnknownHostException;
 import javax.swing.text.BadLocationException;
 import signals.FileProposal;
@@ -49,7 +48,7 @@ public class ChatSystem {
      * Sends a goodbye using the NI
      * @param userName 
      */
-    public void sndGoodbye(String userName){
+    public void sendGoodbye(String userName){
         ni.sendGoodbye(userName);
         this.CONNECTED=false;
     }
@@ -68,7 +67,7 @@ public class ChatSystem {
      * @throws BadLocationException 
      */
      public void showMessage(TextMessage msg) throws BadLocationException {
-            gui.setMsg(msg.getFrom(),msg.getMessage());
+            gui.dispalyMsg(msg.getFrom(),msg.getMessage());
     }
     
      //-------------------   File Transfer   ---------------------------------//
@@ -102,9 +101,9 @@ public class ChatSystem {
      */
     public void showHello(Hello hello) throws BadLocationException{
         if(this.Language=="English"){
-            gui.setMsg(hello.getUsername(),"Hello, I'm "+hello.getUsername());
+            gui.dispalyMsg(hello.getUsername(),"Hello, I'm "+hello.getUsername());
         }else if(this.Language=="Francais"){
-            gui.setMsg(hello.getUsername(),"Bonjour, je suis "+hello.getUsername());
+            gui.dispalyMsg(hello.getUsername(),"Bonjour, je suis "+hello.getUsername());
         }
         
         gui.addUser(hello.getUsername());
@@ -117,9 +116,9 @@ public class ChatSystem {
      */
     public void showHelloOK(HelloOK helloOk) throws BadLocationException{
         if(this.Language=="English"){
-            gui.setMsg(helloOk.getUsername(),"Hello, I'm "+helloOk.getUsername());
+            gui.dispalyMsg(helloOk.getUsername(),"Hello, I'm "+helloOk.getUsername());
         }else if(this.Language=="Francais"){
-            gui.setMsg(helloOk.getUsername(),"Bonjour, je suis "+helloOk.getUsername());
+            gui.dispalyMsg(helloOk.getUsername(),"Bonjour, je suis "+helloOk.getUsername());
         }
         gui.addUser(helloOk.getUsername());
     }
@@ -131,9 +130,9 @@ public class ChatSystem {
      */
     public void showGoodbye(Goodbye goodbye) throws BadLocationException{
         if(this.Language=="English"){
-            gui.setMsg(goodbye.getUsername(),"Goodbye, I'm "+goodbye.getUsername());
+            gui.dispalyMsg(goodbye.getUsername(),"Goodbye, I'm "+goodbye.getUsername());
         }else if(this.Language=="Francais"){
-            gui.setMsg(goodbye.getUsername(),"Aurevoir, je suis "+goodbye.getUsername());
+            gui.dispalyMsg(goodbye.getUsername(),"Aurevoir, je suis "+goodbye.getUsername());
         }
         gui.rmvUser(goodbye.getUsername());
     }
@@ -145,9 +144,9 @@ public class ChatSystem {
      */
     public void showFileProposal(FileProposal fileProposal) throws BadLocationException {
         if(this.Language=="English"){
-            gui.setMsg(fileProposal.getFrom(),"Hey, Wanna get the file "+fileProposal.getFileName()+ " from "+fileProposal.getFrom()+" ?");
+            gui.dispalyMsg(fileProposal.getFrom(),"Hey, Wanna get the file "+fileProposal.getFileName()+ " from "+fileProposal.getFrom()+" ?");
         }else if(this.Language=="Francais"){
-            gui.setMsg(fileProposal.getFrom(),"Hey, veut-tu telecharger le fichier "+fileProposal.getFileName()+ " envoyé par "+fileProposal.getFrom()+" ?");
+            gui.dispalyMsg(fileProposal.getFrom(),"Hey, veut-tu telecharger le fichier "+fileProposal.getFileName()+ " envoyé par "+fileProposal.getFrom()+" ?");
         }
         gui.showChoice(fileProposal.getFileName(),fileProposal.getFrom());
     }
@@ -169,6 +168,10 @@ public class ChatSystem {
      */
     public void setRemoteIpAdress(String username) throws UnknownHostException{
         ni.setRemoteIpAdressString(username);
+    }
+
+    public void notAcceptFileTransfer(String fileName, String from) {
+        ni.notAcceptFileTransfer(fileName, from);
     }
 
     
